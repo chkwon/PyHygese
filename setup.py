@@ -31,7 +31,7 @@ def _safe_makedirs(*paths):
 HGS_VERSION = "c_interface"
 HGS_SRC = "https://github.com/chkwon/HGS-CVRP/archive/refs/heads/{}.tar.gz".format(HGS_VERSION)
 
-HGS_CVRP_WIN = "https://github.com/chkwon/HGS_CVRP_jll.jl/releases/download/libhgscvrp-v0.1.0%2B0/libhgscvrp.v0.1.0.x86_64-w64-mingw32-cxx11.tar.gz"
+HGS_CVRP_WIN = "https://github.com/chkwon/HGS_CVRP_jll.jl/releases/download/HGS_CVRP-v0.1.0%2B0/libhgscvrp.v0.1.0.x86_64-w64-mingw32-cxx11.tar.gz"
 
 def download_build_hgs():
     if platform.system() == "Linux":
