@@ -2,7 +2,7 @@
 
 A Python wrapper for [HGS-CVRP](https://github.com/vidalt/HGS-CVRP).
 
-Installation:
+Installation requires a `C++` compiler and `cmake` tool.
 ```
 git clone git@github.com:chkwon/HGS-CVRP.git
 cd HGS-CVRP
@@ -17,7 +17,7 @@ The generated shared library file `libhgscvrp.dylib`, `libhgscvrp.so`, or `libhg
 
 Open `hgs.py` in this repository and edit `HGS_LIBRARY_FILEPATH` to the `libhgscvrp` shared library file location.
 
-Test:
+Examples:
 ```
 python3 example_tsp.py
 python3 example_cvrp.py
