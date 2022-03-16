@@ -10,6 +10,7 @@ import subprocess
 import os
 import platform
 from os.path import exists, join as pjoin
+import shutil
 
 try:
     import urllib.request
@@ -61,7 +62,8 @@ def download_binary_hgs():
     hgs_bin_path = pjoin("lib", "win_bin.tar.gz")
     urlretrieve(HGS_CVRP_WIN, hgs_bin_path)
     _run("tar xzvf win_bin.tar.gz", "lib")
-    _run("cp bin/libhgscvrp.dll ../src/hgs/", "lib")
+    shutil.copyfile("lib/bin/libhgscvrp.dll", "src/hgs/libhgscvrp.dll")
+    shutil.copyfile("lib/bin/libhgscvrp.dll.a", "src/hgs/libhgscvrp.dll.a")
 
 class BuildPyCommand(_build_py):
     def run(self):
@@ -100,4 +102,5 @@ setup(
     package_data={
         "hgs": ["libhgscvrp.*"],
     },
+    install_requires=["numpy"],
 )
