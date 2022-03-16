@@ -3,12 +3,9 @@
 A Python wrapper for [HGS-CVRP](https://github.com/vidalt/HGS-CVRP).
 
 Installation requires a `C++` compiler and `cmake` tool.
-Download this repository and run `pip install .`
-For example:
+
 ```
-git clone git@github.com:chkwon/pyhgscvrp.git
-cd pyhgscvrp
-pip install .
+python3 -m pip install git+https://github.com/chkwon/pyhgscvrp
 ```
 
 Example codes are found in `/examples`.
