@@ -1,6 +1,17 @@
 import os 
+import platform
+
+if platform.system() == "Linux":
+    lib_ext = "so"
+elif platform.system() == "Darwin":
+    lib_ext = "dylib"
+elif platform.system() == "Windows":
+    lib_ext = "dll"
+else:
+    lib_ext = "so"
+
 basedir = os.path.abspath(os.path.dirname(__file__))
-HGS_LIBRARY_FILEPATH = os.path.join(basedir, 'libhgscvrp.dylib')
+HGS_LIBRARY_FILEPATH = os.path.join(basedir, 'libhgscvrp.{}'.format(lib_ext))
 
 from ctypes import Structure, CDLL, POINTER, c_int, c_double, c_char, sizeof, cast, byref
 import numpy as np
