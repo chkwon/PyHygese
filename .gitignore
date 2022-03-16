@@ -2,6 +2,7 @@ lib/
 *.dylib
 *.so
 *.dll
+*.dll.a
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

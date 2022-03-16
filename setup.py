@@ -10,6 +10,7 @@ import subprocess
 import os
 import platform
 from os.path import exists, join as pjoin
+import shutil
 
 try:
     import urllib.request
@@ -30,6 +31,7 @@ def _safe_makedirs(*paths):
 HGS_VERSION = "c_interface"
 HGS_SRC = "https://github.com/chkwon/HGS-CVRP/archive/refs/heads/{}.tar.gz".format(HGS_VERSION)
 
+HGS_CVRP_WIN = "https://github.com/chkwon/HGS_CVRP_jll.jl/releases/download/libhgscvrp-v0.1.0%2B0/libhgscvrp.v0.1.0.x86_64-w64-mingw32-cxx11.tar.gz"
 
 def download_build_hgs():
     if platform.system() == "Linux":
@@ -55,10 +57,23 @@ def download_build_hgs():
     _run("cp {} ../../src/hgs/".format(lib_filename), "lib/build")
 
 
+def download_binary_hgs():
+    _safe_makedirs("lib")
+    hgs_bin_path = pjoin("lib", "win_bin.tar.gz")
+    urlretrieve(HGS_CVRP_WIN, hgs_bin_path)
+    _run("tar xzvf win_bin.tar.gz", "lib")
+    shutil.copyfile("lib/bin/libhgscvrp.dll", "src/hgs/libhgscvrp.dll")
+    shutil.copyfile("lib/bin/libhgscvrp.dll.a", "src/hgs/libhgscvrp.dll.a")
+
 class BuildPyCommand(_build_py):
     def run(self):
-        print("Build!!!!!! Run!!!!")        
-        download_build_hgs()
+        print("Build!!!!!! Run!!!!")   
+
+        if platform.system() == "Windows":
+            download_binary_hgs()
+        else:
+            download_build_hgs()
+            
         _build_py.run(self)
 
 
@@ -87,4 +102,5 @@ setup(
     package_data={
         "hgs": ["libhgscvrp.*"],
     },
+    install_requires=["numpy"],
 )

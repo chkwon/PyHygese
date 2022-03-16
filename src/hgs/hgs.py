@@ -11,6 +11,7 @@ else:
     lib_ext = "so"
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+# os.add_dll_directory(basedir)
 HGS_LIBRARY_FILEPATH = os.path.join(basedir, 'libhgscvrp.{}'.format(lib_ext))
 
 from ctypes import Structure, CDLL, POINTER, c_int, c_double, c_char, sizeof, cast, byref
@@ -72,7 +73,10 @@ class Solver:
     def __init__(self,
                  algorithm_parameters: AlgorithmParameters,
                  verbose: bool):
-        hgs_library = CDLL(HGS_LIBRARY_FILEPATH)
+        if platform.system() == "Windows":
+            hgs_library = CDLL(HGS_LIBRARY_FILEPATH, winmode=0)
+        else:
+            hgs_library = CDLL(HGS_LIBRARY_FILEPATH)
 
         self.algorithm_parameters = algorithm_parameters
         self.verbose = verbose
