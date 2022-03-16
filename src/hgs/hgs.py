@@ -1,4 +1,6 @@
-HGS_LIBRARY_FILEPATH = "/Users/chkwon/Documents/GitHub/HGS-CVRP/build/libhgscvrp.dylib"
+import os 
+basedir = os.path.abspath(os.path.dirname(__file__))
+HGS_LIBRARY_FILEPATH = os.path.join(basedir, 'libhgscvrp.dylib')
 
 from ctypes import Structure, CDLL, POINTER, c_int, c_double, c_char, sizeof, cast, byref
 import numpy as np
