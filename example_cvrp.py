@@ -16,7 +16,9 @@ def cvrp_example(n):
     data['x_coordinates'] = x
     data['y_coordinates'] = y
 
-    # you may also supply dixt_mtx instead of coordinates, or without coordinates
+    # You may also supply distance_matrix instead of coordinates, or in addition to coordinates
+    # If you supply distance_matrix, it will be used for cost calculation.
+    # The additional coordinates will be helpful in speeding up the algorithm.
     # data['distance_matrix'] = dist_mtx
 
     data['service_time'] = np.zeros(n)
