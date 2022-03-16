@@ -88,8 +88,8 @@ class Solver:
             raise ValueError("In HGS, the depot location must be 0.")
 
         # required data
-        demand = data['demand']
-        n_nodes = demand.size
+        demand = np.asarray(data['demands'])
+        n_nodes = len(demand)
         vehicle_capacity = data['vehicle_capacity']
         maximum_number_of_vehicles = data['num_vehicles']
 
@@ -97,6 +97,8 @@ class Solver:
         service_time = data.get('service_time')
         if service_time is None:
             service_time = np.zeros(n_nodes)
+        else:
+            service_time = np.asarray(service_time)
 
         x_coords = data.get('x_coordinates')
         y_coords = data.get('y_coordinates')
@@ -106,14 +108,18 @@ class Solver:
             assert (dist_mtx is not None)
             x_coords = np.zeros(n_nodes)
             y_coords = np.zeros(n_nodes)
+        else:
+            x_coords = np.asarray(x_coords)
+            y_coords = np.asarray(y_coords)
 
-        assert (x_coords.size == y_coords.size == service_time.size == demand.size)
+        assert (len(x_coords) == len(y_coords) == len(service_time) == len(demand))
         assert (x_coords >= 0.0).all()
         assert (y_coords >= 0.0).all()
         assert (service_time >= 0.0).all()
         assert (demand >= 0.0).all()
 
         if dist_mtx is not None:
+            dist_mtx = np.asarray(dist_mtx)
             assert (dist_mtx.shape[0] == dist_mtx.shape[1])
             assert (dist_mtx >= 0.0).all()
             return self._solve_cvrp_dist_mtx(x_coords,
@@ -141,13 +147,15 @@ class Solver:
         if dist_mtx is None:
             n_nodes = x_coords.size
         else:
+            dist_mtx = np.asarray(dist_mtx)
             n_nodes = dist_mtx.shape[0]
 
         data['num_vehicles'] = 1
         data['depot'] = 0
-        data['demand'] = np.ones(n_nodes)
+        data['demands'] = np.ones(n_nodes)
         data['vehicle_capacity'] = n_nodes
-
+        data['service_time'] = np.zeros(n_nodes)
+        
         return self.solve_cvrp(data)
 
     def _solve_cvrp(self,
