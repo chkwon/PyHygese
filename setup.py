@@ -1,8 +1,3 @@
-# https://packaging.python.org/en/latest/tutorials/packaging-projects/
-# https://lsjsj92.tistory.com/592
-# pip install git+https://github.com/chkwon/pyfun
-# https://jichu4n.com/posts/how-to-add-custom-build-steps-and-commands-to-setuppy/
-
 from setuptools import setup, find_packages
 from setuptools.command.build_ext import build_ext as _build_ext
 from setuptools.command.build_py import build_py as _build_py
@@ -28,7 +23,7 @@ def _safe_makedirs(*paths):
         except os.error:
             pass
 
-HGS_VERSION = "c_interface"
+HGS_VERSION = "569fea0a231f2ac2fb36ea7e6cc87fa57e8e809a"
 HGS_SRC = "https://github.com/chkwon/HGS-CVRP/archive/refs/heads/{}.tar.gz".format(HGS_VERSION)
 
 HGS_CVRP_WIN = "https://github.com/chkwon/HGS_CVRP_jll.jl/releases/download/HGS_CVRP-v0.1.0%2B0/libhgscvrp.v0.1.0.x86_64-w64-mingw32-cxx11.tar.gz"
