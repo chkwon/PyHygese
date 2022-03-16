@@ -1,6 +1,6 @@
 # pyhgscvrp
 
-A Python wrapper for [HGS-CVRP](https://github.com/vidalt/HGS-CVRP).
+This package provides a simple Python wrapper for the [HGS-CVRP](https://github.com/vidalt/HGS-CVRP) solver through [its C interface](https://github.com/chkwon/HGS-CVRP).
 
 Installation requires a `C++` compiler and `cmake` tool.
 
