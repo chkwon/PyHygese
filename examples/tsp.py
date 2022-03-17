@@ -1,5 +1,5 @@
 import numpy as np 
-from hgs import AlgorithmParameters, Solver
+from hygese import AlgorithmParameters, Solver
 
 def tsp_by_coordinates(n):
     x = (np.random.rand(n) * 1000)

@@ -1,11 +1,11 @@
-# pyhgscvrp
+# hygese
 
 This package provides a simple Python wrapper for the [HGS-CVRP](https://github.com/vidalt/HGS-CVRP) solver through [its C interface](https://github.com/chkwon/HGS-CVRP).
 
 Installation requires a `C++` compiler and `cmake` tool.
 
 ```
-python3 -m pip install git+https://github.com/chkwon/pyhgscvrp
+python3 -m pip install git+https://github.com/chkwon/hygese
 ```
 
 Example codes are found in `/examples`.
@@ -18,7 +18,7 @@ python3 examples/cvrp.py
 ## CVRP Example (random)
 ```python
 import numpy as np 
-from hgs import AlgorithmParameters, Solver
+from hygese import AlgorithmParameters, Solver
 
 n = 20
 x = (np.random.rand(n) * 1000)
@@ -61,6 +61,8 @@ print(result.routes)
 An example from [Google OR-Tools webpage](https://developers.google.com/optimization/routing/cvrp):
 
 ```python
+from hygese import AlgorithmParameters, Solver
+
 data = {}
 data['distance_matrix'] = [
     [
@@ -155,6 +157,8 @@ An example from [Google OR-Tools webpage](https://developers.google.com/optimiza
 
 
 ```python
+from hygese import AlgorithmParameters, Solver
+
 data = {}
 data['distance_matrix'] = [
     [0, 2451, 713, 1018, 1631, 1374, 2408, 213, 2571, 875, 1420, 2145, 1972],

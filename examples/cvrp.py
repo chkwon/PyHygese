@@ -1,5 +1,5 @@
 import numpy as np 
-from hgs import AlgorithmParameters, Solver
+from hygese import AlgorithmParameters, Solver
 
 def cvrp_example(n):
     x = (np.random.rand(n) * 1000)
