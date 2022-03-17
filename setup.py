@@ -23,8 +23,8 @@ def _safe_makedirs(*paths):
         except os.error:
             pass
 
-HGS_VERSION = "v0.1.0"
-HGS_SRC = "https://github.com/chkwon/HGS-CVRP/archive/{}.tar.gz".format(HGS_VERSION)
+HGS_VERSION = "0.1.0"
+HGS_SRC = "https://github.com/chkwon/HGS-CVRP/archive/v{}.tar.gz".format(HGS_VERSION)
 
 HGS_CVRP_WIN = "https://github.com/chkwon/HGS_CVRP_jll.jl/releases/download/HGS_CVRP-v0.1.0%2B0/libhgscvrp.v0.1.0.x86_64-w64-mingw32-cxx11.tar.gz"
 
