@@ -120,6 +120,8 @@ def cvrp_or_tools():
     result = hgs_solver.solve_cvrp(data)
     print(result.cost)
     print(result.routes)
+    
+    assert(result.cost == 6208)
 
 
 if __name__ == '__main__':
