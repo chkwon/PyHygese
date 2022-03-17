@@ -189,5 +189,5 @@ print(result.routes)
 
 
 ## Others
-A Julia wrapper is available: [HybridGeneticSearchCVRP.jl](https://github.com/chkwon/HybridGeneticSearchCVRP.jl)
+A Julia wrapper is available: [Hygese.jl](https://github.com/chkwon/Hygese.jl)
 
