@@ -102,6 +102,8 @@ def tsp_ortools():
     result = hgs_solver.solve_tsp(data)
     print(result.cost)
     print(result.routes)
+    
+    assert(result.cost == 7293)
 
 if __name__ == '__main__':
     n = 20
