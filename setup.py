@@ -26,7 +26,7 @@ def _safe_makedirs(*paths):
 HGS_VERSION = "0.1.0"
 HGS_SRC = "https://github.com/chkwon/HGS-CVRP/archive/v{}.tar.gz".format(HGS_VERSION)
 
-HGS_CVRP_WIN = "https://github.com/chkwon/HGS_CVRP_jll.jl/releases/download/HGS_CVRP-v0.1.0%2B0/libhgscvrp.v0.1.0.x86_64-w64-mingw32-cxx11.tar.gz"
+HGS_CVRP_WIN = "https://github.com/chkwon/HGS_CVRP_jll.jl/releases/download/HGS_CVRP-v{}%2B0/libhgscvrp.v{}.x86_64-w64-mingw32-cxx11.tar.gz".format(HGS_VERSION, HGS_VERSION)
 
 
 def download_build_hgs():
@@ -57,7 +57,7 @@ def download_binary_hgs():
     _safe_makedirs("download_win")
     hgs_bin_path = pjoin("download_win", "win_bin.tar.gz")
     urlretrieve(HGS_CVRP_WIN, hgs_bin_path)
-    _run("tar xzvf win_bin.tar.gz", "lib")
+    _run("tar xzvf win_bin.tar.gz", "download_win")
     shutil.copyfile("download_win/bin/libhgscvrp.dll", "hygese/libhgscvrp.dll")
     shutil.copyfile("download_win/bin/libhgscvrp.dll.a", "hygese/libhgscvrp.dll.a")
 
