@@ -42,24 +42,24 @@ def download_build_hgs():
         
     lib_filename = "libhgscvrp.{}".format(lib_ext)
 
-    _safe_makedirs("lib")
-    _safe_makedirs("lib/build")
+    _safe_makedirs("download")
+    _safe_makedirs("download/build")
     hgs_src_tarball_name = "{}.tar.gz".format(HGS_VERSION)
     hgs_src_path = pjoin("lib", hgs_src_tarball_name)
     urlretrieve(HGS_SRC, hgs_src_path)
-    _run("tar xzvf {}".format(hgs_src_tarball_name), "lib")
-    _run("cmake -DCMAKE_BUILD_TYPE=Release ../HGS-CVRP-{}".format(HGS_VERSION), "lib/build")
-    _run("make hgscvrp", "lib/build")
-    _run("cp {} ../../hygese/".format(lib_filename), "lib/build")
+    _run("tar xzvf {}".format(hgs_src_tarball_name), "download")
+    _run("cmake -DCMAKE_BUILD_TYPE=Release ../HGS-CVRP-{}".format(HGS_VERSION), "download/build")
+    _run("make hgscvrp", "download/build")
+    _run("cp {} ../../hygese/".format(lib_filename), "download/build")
 
 
 def download_binary_hgs():
-    _safe_makedirs("lib")
-    hgs_bin_path = pjoin("lib", "win_bin.tar.gz")
+    _safe_makedirs("download")
+    hgs_bin_path = pjoin("download", "win_bin.tar.gz")
     urlretrieve(HGS_CVRP_WIN, hgs_bin_path)
     _run("tar xzvf win_bin.tar.gz", "lib")
-    shutil.copyfile("lib/bin/libhgscvrp.dll", "hygese/libhgscvrp.dll")
-    shutil.copyfile("lib/bin/libhgscvrp.dll.a", "hygese/libhgscvrp.dll.a")
+    shutil.copyfile("download/bin/libhgscvrp.dll", "hygese/libhgscvrp.dll")
+    shutil.copyfile("download/bin/libhgscvrp.dll.a", "hygese/libhgscvrp.dll.a")
 
 class BuildPyCommand(_build_py):
     def run(self):
