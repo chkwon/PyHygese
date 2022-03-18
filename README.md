@@ -3,6 +3,7 @@
 [![Build Status](https://github.com/chkwon/hygese/workflows/CI/badge.svg?branch=master)](https://github.com/chkwon/hygese/actions/workflows/ci.yml?query=workflow%3ACI)
 [![codecov](https://codecov.io/gh/chkwon/hygese/branch/master/graph/badge.svg)](https://codecov.io/gh/chkwon/hygese)
 
+*This package is under active development. It can introduce breaking changes anytime. Please use it at your own risk.*
 
 **A solver for the Capacitated Vehicle Routing Problem (CVRP)**
 
