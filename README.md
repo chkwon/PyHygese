@@ -3,7 +3,10 @@
 [![Build Status](https://github.com/chkwon/hygese/workflows/CI/badge.svg?branch=master)](https://github.com/chkwon/hygese/actions/workflows/ci.yml?query=workflow%3ACI)
 [![codecov](https://codecov.io/gh/chkwon/hygese/branch/master/graph/badge.svg)](https://codecov.io/gh/chkwon/hygese)
 
-This package provides a simple Python wrapper for the [HGS-CVRP](https://github.com/vidalt/HGS-CVRP) solver through [its C interface](https://github.com/chkwon/HGS-CVRP).
+
+**A solver for the Capacitated Vehicle Routing Problem (CVRP)**
+
+This package provides a simple Python wrapper for the Hybrid Genetic Search solver for Capacitated Vehicle Routing Problems [(HGS-CVRP)](https://github.com/vidalt/HGS-CVRP) through [a C interface](https://github.com/chkwon/HGS-CVRP).
 
 Installation requires a `C++` compiler and `cmake` tool.
 
