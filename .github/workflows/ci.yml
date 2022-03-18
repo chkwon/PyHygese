@@ -46,3 +46,7 @@ jobs:
         pip install .
         python setup.py build
         pytest -s
+
+
+    - name: "Upload coverage to Codecov"
+      uses: codecov/codecov-action@v1
