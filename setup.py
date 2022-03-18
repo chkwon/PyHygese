@@ -28,6 +28,7 @@ HGS_SRC = "https://github.com/chkwon/HGS-CVRP/archive/v{}.tar.gz".format(HGS_VER
 
 HGS_CVRP_WIN = "https://github.com/chkwon/HGS_CVRP_jll.jl/releases/download/HGS_CVRP-v0.1.0%2B0/libhgscvrp.v0.1.0.x86_64-w64-mingw32-cxx11.tar.gz"
 
+
 def download_build_hgs():
     if platform.system() == "Linux":
         lib_ext = "so"
@@ -49,7 +50,7 @@ def download_build_hgs():
     _run("tar xzvf {}".format(hgs_src_tarball_name), "lib")
     _run("cmake -DCMAKE_BUILD_TYPE=Release ../HGS-CVRP-{}".format(HGS_VERSION), "lib/build")
     _run("make hgscvrp", "lib/build")
-    _run("cp {} ../../src/hygese/".format(lib_filename), "lib/build")
+    _run("cp {} ../../hygese/".format(lib_filename), "lib/build")
 
 
 def download_binary_hgs():
@@ -57,8 +58,8 @@ def download_binary_hgs():
     hgs_bin_path = pjoin("lib", "win_bin.tar.gz")
     urlretrieve(HGS_CVRP_WIN, hgs_bin_path)
     _run("tar xzvf win_bin.tar.gz", "lib")
-    shutil.copyfile("lib/bin/libhgscvrp.dll", "src/hygese/libhgscvrp.dll")
-    shutil.copyfile("lib/bin/libhgscvrp.dll.a", "src/hygese/libhgscvrp.dll.a")
+    shutil.copyfile("lib/bin/libhgscvrp.dll", "hygese/libhgscvrp.dll")
+    shutil.copyfile("lib/bin/libhgscvrp.dll.a", "hygese/libhgscvrp.dll.a")
 
 class BuildPyCommand(_build_py):
     def run(self):
@@ -88,8 +89,8 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],    
-    package_dir={"": "src"},
-    packages=find_packages(where="src"),
+    # package_dir={"": "src"},
+    packages=find_packages(),
     python_requires=">=3.6",
     cmdclass={
         "build_py": BuildPyCommand,
