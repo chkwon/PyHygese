@@ -1,4 +1,5 @@
 download/
+download_win/
 *.dylib
 *.so
 *.dll

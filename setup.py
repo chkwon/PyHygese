@@ -54,12 +54,12 @@ def download_build_hgs():
 
 
 def download_binary_hgs():
-    _safe_makedirs("download")
-    hgs_bin_path = pjoin("download", "win_bin.tar.gz")
+    _safe_makedirs("download_win")
+    hgs_bin_path = pjoin("download_win", "win_bin.tar.gz")
     urlretrieve(HGS_CVRP_WIN, hgs_bin_path)
     _run("tar xzvf win_bin.tar.gz", "lib")
-    shutil.copyfile("download/bin/libhgscvrp.dll", "hygese/libhgscvrp.dll")
-    shutil.copyfile("download/bin/libhgscvrp.dll.a", "hygese/libhgscvrp.dll.a")
+    shutil.copyfile("download_win/bin/libhgscvrp.dll", "hygese/libhgscvrp.dll")
+    shutil.copyfile("download_win/bin/libhgscvrp.dll.a", "hygese/libhgscvrp.dll.a")
 
 class BuildPyCommand(_build_py):
     def run(self):
