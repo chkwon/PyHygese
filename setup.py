@@ -45,7 +45,7 @@ def download_build_hgs():
     _safe_makedirs("download")
     _safe_makedirs("download/build")
     hgs_src_tarball_name = "{}.tar.gz".format(HGS_VERSION)
-    hgs_src_path = pjoin("lib", hgs_src_tarball_name)
+    hgs_src_path = pjoin("download", hgs_src_tarball_name)
     urlretrieve(HGS_SRC, hgs_src_path)
     _run("tar xzvf {}".format(hgs_src_tarball_name), "download")
     _run("cmake -DCMAKE_BUILD_TYPE=Release ../HGS-CVRP-{}".format(HGS_VERSION), "download/build")
