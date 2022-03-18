@@ -62,6 +62,7 @@ An example from [Google OR-Tools webpage](https://developers.google.com/optimiza
 
 ```python
 from hygese import AlgorithmParameters, Solver
+import numpy as np 
 
 data = {}
 data['distance_matrix'] = [
@@ -137,7 +138,7 @@ data['distance_matrix'] = [
 data['num_vehicles'] = 4
 data['depot'] = 0
 data['demands'] = [0, 1, 1, 2, 4, 2, 4, 8, 8, 1, 2, 1, 2, 4, 4, 8, 8]
-data['vehicle_capacity'] = 15  # differenct from OR-Tools
+data['vehicle_capacity'] = 15  # different from OR-Tools: homogeneous capacity
 data['service_time'] = np.zeros(len(data['demands']))
 
 # Solver initialization

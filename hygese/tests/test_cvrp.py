@@ -5,10 +5,8 @@ from hygese import AlgorithmParameters, Solver
 def test_cvrp():
     data = {}
     data['distance_matrix'] = [
-        [
-            0, 548, 776, 696, 582, 274, 502, 194, 308, 194, 536, 502, 388, 354,
-            468, 776, 662
-        ],
+        [0, 548, 776, 696, 582, 274, 502, 194, 308, 194, 536, 502, 388, 354,
+            468, 776, 662],
         [
             548, 0, 684, 308, 194, 502, 730, 354, 696, 742, 1084, 594, 480, 674,
             1016, 868, 1210
@@ -77,7 +75,7 @@ def test_cvrp():
     data['num_vehicles'] = 4
     data['depot'] = 0
     data['demands'] = [0, 1, 1, 2, 4, 2, 4, 8, 8, 1, 2, 1, 2, 4, 4, 8, 8]
-    data['vehicle_capacity'] = 15  # differenct from OR-Tools
+    data['vehicle_capacity'] = 15  # different from OR-Tools: homogeneous capacity
     data['service_time'] = np.zeros(len(data['demands']))
 
     # Solver initialization
