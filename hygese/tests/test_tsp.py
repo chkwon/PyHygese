@@ -1,5 +1,5 @@
-import numpy as np 
 from hygese import AlgorithmParameters, Solver
+
 
 def test_tsp():
     data = {}
@@ -19,14 +19,14 @@ def test_tsp():
         [1972, 579, 1260, 987, 371, 999, 701, 2099, 600, 1162, 1200, 504, 0],
     ]  # yapf: disable
 
-        # Solver initialization
+    # Solver initialization
     ap = AlgorithmParameters()
-    ap.timeLimit = 0.8 # seconds
+    ap.timeLimit = 0.8  # seconds
 
     # solve TSP using both coordinates and dist_mtx
     hgs_solver = Solver(ap, True)
     result = hgs_solver.solve_tsp(data)
     print(result.cost)
     print(result.routes)
-    
-    assert(result.cost == 7293)
+
+    assert (result.cost == 7293)

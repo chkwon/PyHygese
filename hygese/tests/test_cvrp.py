@@ -1,5 +1,6 @@
-import numpy as np 
+import numpy as np
 from hygese import AlgorithmParameters, Solver
+
 
 def test_cvrp():
     data = {}
@@ -88,5 +89,5 @@ def test_cvrp():
     result = hgs_solver.solve_cvrp(data)
     print(result.cost)
     print(result.routes)
-    
-    assert(result.cost == 6208)
+
+    assert (result.cost == 6208)

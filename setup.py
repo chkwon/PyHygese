@@ -9,6 +9,7 @@ import shutil
 
 try:
     import urllib.request
+
     urlretrieve = urllib.request.urlretrieve
 except ImportError:  # python 2
     from urllib import urlretrieve
@@ -16,6 +17,8 @@ except ImportError:  # python 2
 
 def _run(cmd, cwd):
     subprocess.check_call(cmd, shell=True, cwd=cwd)
+
+
 def _safe_makedirs(*paths):
     for path in paths:
         try:
@@ -23,13 +26,19 @@ def _safe_makedirs(*paths):
         except os.error:
             pass
 
+
 HGS_VERSION = "0.1.0"
-HGS_SRC = "https://github.com/chkwon/HGS-CVRP/archive/v{}.tar.gz".format(HGS_VERSION)
+HGS_SRC = f"https://github.com/chkwon/HGS-CVRP/archive/v{HGS_VERSION}.tar.gz"
 
-HGS_CVRP_WIN = "https://github.com/chkwon/HGS_CVRP_jll.jl/releases/download/HGS_CVRP-v{}%2B0/libhgscvrp.v{}.x86_64-w64-mingw32-cxx11.tar.gz".format(HGS_VERSION, HGS_VERSION)
+HGS_CVRP_URL = f"https://github.com/chkwon/HGS_CVRP_jll.jl/releases/download/HGS_CVRP-v{HGS_VERSION}%2B0"
+HGS_CVRP_WIN = f"{HGS_CVRP_URL}/libhgscvrp.v{HGS_VERSION}.x86_64-w64-mingw32-cxx11.tar.gz"
+
+LIB_DIR = "lib"
+BUILD_DIR = "lib/build"
+BIN_DIR = "lib/bin"
 
 
-def download_build_hgs():
+def get_lib_filename():
     if platform.system() == "Linux":
         lib_ext = "so"
     elif platform.system() == "Darwin":
@@ -38,40 +47,42 @@ def download_build_hgs():
         lib_ext = "dll"
     else:
         lib_ext = "so"
+    return f"libhgscvrp.{lib_ext}"
 
-        
-    lib_filename = "libhgscvrp.{}".format(lib_ext)
 
-    _safe_makedirs("download")
-    _safe_makedirs("download/build")
+LIB_FILENAME = get_lib_filename()
+
+
+def download_build_hgs():
+    _safe_makedirs(LIB_DIR)
+    _safe_makedirs(BUILD_DIR)
     hgs_src_tarball_name = "{}.tar.gz".format(HGS_VERSION)
-    hgs_src_path = pjoin("download", hgs_src_tarball_name)
+    hgs_src_path = pjoin(LIB_DIR, hgs_src_tarball_name)
     urlretrieve(HGS_SRC, hgs_src_path)
-    _run("tar xzvf {}".format(hgs_src_tarball_name), "download")
-    _run("cmake -DCMAKE_BUILD_TYPE=Release ../HGS-CVRP-{}".format(HGS_VERSION), "download/build")
-    _run("make hgscvrp", "download/build")
-    _run("cp {} ../../hygese/".format(lib_filename), "download/build")
+    _run("tar xzvf {}".format(hgs_src_tarball_name), LIB_DIR)
+    _run("cmake -DCMAKE_BUILD_TYPE=Release ../HGS-CVRP-{}".format(HGS_VERSION), BUILD_DIR)
+    _run("make hgscvrp", BUILD_DIR)
+    _run(f"cp {LIB_FILENAME} ../../hygese/", BUILD_DIR)
 
 
 def download_binary_hgs():
-    _safe_makedirs("download_win")
-    hgs_bin_path = pjoin("download_win", "win_bin.tar.gz")
+    _safe_makedirs(LIB_DIR)
+    hgs_bin_path = pjoin(LIB_DIR, "win_bin.tar.gz")
     urlretrieve(HGS_CVRP_WIN, hgs_bin_path)
     _run("tar xzvf win_bin.tar.gz", "download_win")
-    shutil.copyfile("download_win/bin/libhgscvrp.dll", "hygese/libhgscvrp.dll")
-    shutil.copyfile("download_win/bin/libhgscvrp.dll.a", "hygese/libhgscvrp.dll.a")
+    shutil.copyfile(f"{BIN_DIR}/{LIB_FILENAME}", f"hygese/{LIB_FILENAME}")
+
 
 class BuildPyCommand(_build_py):
     def run(self):
-        print("Build!!!!!! Run!!!!")   
+        print("Build!!!!!! Run!!!!")
 
         if platform.system() == "Windows":
             download_binary_hgs()
         else:
             download_build_hgs()
-            
-        _build_py.run(self)
 
+        _build_py.run(self)
 
 
 setup(
@@ -88,13 +99,13 @@ setup(
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-    ],    
+    ],
     package_dir={"": "."},
     packages=find_packages(),
     python_requires=">=3.6",
     cmdclass={
         "build_py": BuildPyCommand,
-    },    
+    },
     package_data={
         "": ["libhgscvrp.*"],
     },

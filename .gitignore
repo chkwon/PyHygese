@@ -1,5 +1,5 @@
-download/
-download_win/
+build_tmp/
+.idea
 *.dylib
 *.so
 *.dll

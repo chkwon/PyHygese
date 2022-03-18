@@ -1,22 +1,25 @@
-import os 
+import os
 import platform
+from ctypes import Structure, CDLL, POINTER, c_int, c_double, c_char, sizeof, cast, byref
+import numpy as np
 
-if platform.system() == "Linux":
-    lib_ext = "so"
-elif platform.system() == "Darwin":
-    lib_ext = "dylib"
-elif platform.system() == "Windows":
-    lib_ext = "dll"
-else:
-    lib_ext = "so"
+
+def get_lib_filename():
+    if platform.system() == "Linux":
+        lib_ext = "so"
+    elif platform.system() == "Darwin":
+        lib_ext = "dylib"
+    elif platform.system() == "Windows":
+        lib_ext = "dll"
+    else:
+        lib_ext = "so"
+    return f"libhgscvrp.{lib_ext}"
+
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 basedir = os.path.dirname(os.path.realpath(__file__))
 # os.add_dll_directory(basedir)
-HGS_LIBRARY_FILEPATH = os.path.join(basedir, 'libhgscvrp.{}'.format(lib_ext))
-
-from ctypes import Structure, CDLL, POINTER, c_int, c_double, c_char, sizeof, cast, byref
-import numpy as np
+HGS_LIBRARY_FILEPATH = os.path.join(basedir, get_lib_filename())
 
 c_double_p = POINTER(c_double)
 c_int_p = POINTER(c_int)
@@ -171,7 +174,7 @@ class Solver:
         data['demands'] = np.ones(n_nodes)
         data['vehicle_capacity'] = n_nodes
         data['service_time'] = np.zeros(n_nodes)
-        
+
         return self.solve_cvrp(data)
 
     def _solve_cvrp(self,
