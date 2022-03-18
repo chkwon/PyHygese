@@ -59,7 +59,7 @@ def download_build_hgs():
     hgs_src_tarball_name = "{}.tar.gz".format(HGS_VERSION)
     hgs_src_path = pjoin(LIB_DIR, hgs_src_tarball_name)
     urlretrieve(HGS_SRC, hgs_src_path)
-    _run("tar xzvf {}".format(hgs_src_tarball_name), LIB_DIR)
+    _run(f"tar xzvf {hgs_src_tarball_name}", LIB_DIR)
     _run("cmake -DCMAKE_BUILD_TYPE=Release ../HGS-CVRP-{}".format(HGS_VERSION), BUILD_DIR)
     _run("make hgscvrp", BUILD_DIR)
     _run(f"cp {LIB_FILENAME} ../../hygese/", BUILD_DIR)
@@ -67,9 +67,10 @@ def download_build_hgs():
 
 def download_binary_hgs():
     _safe_makedirs(LIB_DIR)
-    hgs_bin_path = pjoin(LIB_DIR, "win_bin.tar.gz")
+    dll_tarball_name = "win_bin.tar.gz"
+    hgs_bin_path = pjoin(LIB_DIR, dll_tarball_name)
     urlretrieve(HGS_CVRP_WIN, hgs_bin_path)
-    _run("tar xzvf win_bin.tar.gz", "download_win")
+    _run(f"tar xzvf {dll_tarball_name}", LIB_DIR)
     shutil.copyfile(f"{BIN_DIR}/{LIB_FILENAME}", f"hygese/{LIB_FILENAME}")
 
 
