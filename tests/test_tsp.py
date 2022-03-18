@@ -1,7 +1,6 @@
 import numpy as np 
 from hygese import AlgorithmParameters, Solver
 
-
 def test_tsp():
     data = {}
     data['distance_matrix'] = [
@@ -31,4 +30,3 @@ def test_tsp():
     print(result.routes)
     
     assert(result.cost == 7293)
-
