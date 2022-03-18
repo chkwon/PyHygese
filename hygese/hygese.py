@@ -13,7 +13,7 @@ else:
 basedir = os.path.abspath(os.path.dirname(__file__))
 basedir = os.path.dirname(os.path.realpath(__file__))
 # os.add_dll_directory(basedir)
-HGS_LIBRARY_FILEPATH = os.path.join(basedir, 'libhgscvrp.{}'.format(lib_ext))
+HGS_LIBRARY_FILEPATH = os.path.join(basedir, '..', 'libhgscvrp.{}'.format(lib_ext))
 
 from ctypes import Structure, CDLL, POINTER, c_int, c_double, c_char, sizeof, cast, byref
 import numpy as np
