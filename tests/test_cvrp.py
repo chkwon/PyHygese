@@ -90,5 +90,3 @@ def test_cvrp():
     print(result.routes)
     
     assert(result.cost == 6208)
-
-
