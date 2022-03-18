@@ -33,7 +33,7 @@ verbose = True
 
 # Solver initialization
 ap = AlgorithmParameters()
-ap.timeLimit = 3.2
+ap.timeLimit = 3.2 # seconds
 hgs_solver = Solver(ap, verbose)
 
 # data preparation
