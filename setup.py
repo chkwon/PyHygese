@@ -89,14 +89,14 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],    
-    # package_dir={"": "src"},
+    package_dir={"": "."},
     packages=find_packages(),
     python_requires=">=3.6",
     cmdclass={
         "build_py": BuildPyCommand,
     },    
     package_data={
-        "hygese": ["libhgscvrp.*"],
+        "": ["libhgscvrp.*"],
     },
     install_requires=["numpy"],
 )
