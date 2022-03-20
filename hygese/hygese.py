@@ -113,11 +113,11 @@ class Solver:
         maximum_number_of_vehicles = data['num_vehicles']
 
         # optional service time
-        service_time = data.get('service_time')
-        if service_time is None:
-            service_time = np.zeros(n_nodes)
+        service_times = data.get('service_times')
+        if service_times is None:
+            service_times = np.zeros(n_nodes)
         else:
-            service_time = np.asarray(service_time)
+            service_times = np.asarray(service_times)
 
         x_coords = data.get('x_coordinates')
         y_coords = data.get('y_coordinates')
@@ -131,10 +131,10 @@ class Solver:
             x_coords = np.asarray(x_coords)
             y_coords = np.asarray(y_coords)
 
-        assert (len(x_coords) == len(y_coords) == len(service_time) == len(demand))
+        assert (len(x_coords) == len(y_coords) == len(service_times) == len(demand))
         assert (x_coords >= 0.0).all()
         assert (y_coords >= 0.0).all()
-        assert (service_time >= 0.0).all()
+        assert (service_times >= 0.0).all()
         assert (demand >= 0.0).all()
 
         if dist_mtx is not None:
@@ -144,7 +144,7 @@ class Solver:
             return self._solve_cvrp_dist_mtx(x_coords,
                                              y_coords,
                                              dist_mtx,
-                                             service_time,
+                                             service_times,
                                              demand,
                                              vehicle_capacity,
                                              maximum_number_of_vehicles,
@@ -153,7 +153,7 @@ class Solver:
         else:
             return self._solve_cvrp(x_coords,
                                     y_coords,
-                                    service_time,
+                                    service_times,
                                     demand,
                                     vehicle_capacity,
                                     maximum_number_of_vehicles,
@@ -173,14 +173,14 @@ class Solver:
         data['depot'] = 0
         data['demands'] = np.ones(n_nodes)
         data['vehicle_capacity'] = n_nodes
-        data['service_time'] = np.zeros(n_nodes)
+        data['service_times'] = np.zeros(n_nodes)
 
         return self.solve_cvrp(data)
 
     def _solve_cvrp(self,
                     x_coords: np.ndarray,
                     y_coords: np.ndarray,
-                    service_time: np.ndarray,
+                    service_times: np.ndarray,
                     demand: np.ndarray,
                     vehicle_capacity: int,
                     maximum_number_of_vehicles: int,
@@ -189,7 +189,7 @@ class Solver:
         n_nodes = x_coords.size
         x_ct = x_coords.astype(c_double).ctypes
         y_ct = y_coords.astype(c_double).ctypes
-        s_ct = service_time.astype(c_double).ctypes
+        s_ct = service_times.astype(c_double).ctypes
         d_ct = demand.astype(c_double).ctypes
 
         sol_p = self._c_api_solve_cvrp(n_nodes,
@@ -210,7 +210,7 @@ class Solver:
                              x_coords: np.ndarray,
                              y_coords: np.ndarray,
                              dist_mtx: np.ndarray,
-                             service_time: np.ndarray,
+                             service_times: np.ndarray,
                              demand: np.ndarray,
                              vehicle_capacity: int,
                              maximum_number_of_vehicles: int,
@@ -220,7 +220,7 @@ class Solver:
 
         x_ct = x_coords.astype(c_double).ctypes
         y_ct = y_coords.astype(c_double).ctypes
-        s_ct = service_time.astype(c_double).ctypes
+        s_ct = service_times.astype(c_double).ctypes
         d_ct = demand.astype(c_double).ctypes
 
         m_ct = dist_mtx.reshape(n_nodes * n_nodes).astype(c_double).ctypes

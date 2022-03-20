@@ -21,7 +21,7 @@ def cvrp_example(n):
     # The additional coordinates will be helpful in speeding up the algorithm.
     # data['distance_matrix'] = dist_mtx
 
-    data['service_time'] = np.zeros(n)
+    data['service_times'] = np.zeros(n)
     demand = np.ones(n)
     demand[0] = 0 # depot demand = 0
     data['demands'] = demand
@@ -109,7 +109,7 @@ def cvrp_or_tools():
     data['depot'] = 0
     data['demands'] = [0, 1, 1, 2, 4, 2, 4, 8, 8, 1, 2, 1, 2, 4, 4, 8, 8]
     data['vehicle_capacity'] = 15  # # different from OR-Tools: homogeneous capacity
-    data['service_time'] = np.zeros(len(data['demands']))
+    data['service_times'] = np.zeros(len(data['demands']))
 
     # Solver initialization
     ap = AlgorithmParameters()
