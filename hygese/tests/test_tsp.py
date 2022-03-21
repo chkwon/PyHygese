@@ -20,11 +20,10 @@ def test_tsp():
     ]
 
     # Solver initialization
-    ap = AlgorithmParameters()
-    ap.timeLimit = 0.8  # seconds
+    ap = AlgorithmParameters(timeLimit=0.8)  # seconds
 
     # solve TSP using both coordinates and dist_mtx
-    hgs_solver = Solver(ap, True)
+    hgs_solver = Solver(parameters=ap, verbose=True)
     result = hgs_solver.solve_tsp(data)
     print(result.cost)
     print(result.routes)
