@@ -76,7 +76,7 @@ def test_cvrp():
     data['depot'] = 0
     data['demands'] = [0, 1, 1, 2, 4, 2, 4, 8, 8, 1, 2, 1, 2, 4, 4, 8, 8]
     data['vehicle_capacity'] = 15  # different from OR-Tools: homogeneous capacity
-    data['service_time'] = np.zeros(len(data['demands']))
+    # data['service_times'] = np.zeros(len(data['demands']))
 
     # Solver initialization
     ap = AlgorithmParameters()
@@ -87,9 +87,14 @@ def test_cvrp():
     result = hgs_solver.solve_cvrp(data)
     print(result.cost)
     print(result.routes)
+    assert (result.cost == 6208)
 
-<<<<<<< Updated upstream
-=======
+
+
+
+
+
+
 def test_cvrp_inputs():
     data = {}
     data['distance_matrix'] = [
@@ -135,5 +140,22 @@ def test_cvrp_inputs():
     result = hgs_solver.solve_cvrp(data)
     print(result.cost)
     print(result.routes)
->>>>>>> Stashed changes
     assert (result.cost == 6208)
+
+
+
+    # Solve with calculated distances
+    dist_mtx = np.zeros((n, n))
+    for i in range(n):
+        for j in range(n):
+            dist_mtx[i][j] = np.sqrt(
+                np.square(x[i] - x[j]) + np.square(y[i] - y[j])
+            )
+    data['distance_matrix'] = dist_mtx 
+    result1 = hgs_solver.solve_cvrp(data)
+
+    # solve without distance_matrix
+    data.pop("distance_matrix", None)
+    result2 = hgs_solver.solve_cvrp(data)
+    assert (result1.cost == result2.cost)
+
