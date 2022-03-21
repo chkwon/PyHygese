@@ -24,12 +24,10 @@ from hygese import AlgorithmParameters, Solver
 n = 20
 x = (np.random.rand(n) * 1000)
 y = (np.random.rand(n) * 1000)
-verbose = True
 
 # Solver initialization
-ap = AlgorithmParameters()
-ap.timeLimit = 3.2 # seconds
-hgs_solver = Solver(ap, verbose)
+ap = AlgorithmParameters(timeLimit=3.2)  # seconds
+hgs_solver = Solver(parameters=ap, verbose=True)
 
 # data preparation
 data = {}
@@ -92,9 +90,8 @@ data['vehicle_capacity'] = 15  # different from OR-Tools: homogeneous capacity
 data['service_times'] = np.zeros(len(data['demands']))
 
 # Solver initialization
-ap = AlgorithmParameters()
-ap.timeLimit = 1.1
-hgs_solver = Solver(ap, True)
+ap = AlgorithmParameters(timeLimit=3.2)  # seconds
+hgs_solver = Solver(parameters=ap, verbose=True)
 
 # Solve
 result = hgs_solver.solve_cvrp(data)
@@ -127,11 +124,10 @@ data['distance_matrix'] = [
 ] 
 
 # Solver initialization
-ap = AlgorithmParameters()
-ap.timeLimit = 0.8 # seconds
+ap = AlgorithmParameters(timeLimit=0.8)  # seconds
+hgs_solver = Solver(parameters=ap, verbose=True)
 
-# solve TSP using both coordinates and dist_mtx
-hgs_solver = Solver(ap, True)
+# Solve
 result = hgs_solver.solve_tsp(data)
 print(result.cost)
 print(result.routes)
