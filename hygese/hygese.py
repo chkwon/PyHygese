@@ -1,6 +1,7 @@
 import os
 import platform
 from ctypes import Structure, CDLL, POINTER, c_int, c_double, c_char, sizeof, cast, byref
+from dataclasses import dataclass
 import numpy as np
 
 
@@ -16,7 +17,7 @@ def get_lib_filename():
     return f"libhgscvrp.{lib_ext}"
 
 
-basedir = os.path.abspath(os.path.dirname(__file__))
+# basedir = os.path.abspath(os.path.dirname(__file__))
 basedir = os.path.dirname(os.path.realpath(__file__))
 # os.add_dll_directory(basedir)
 HGS_LIBRARY_FILEPATH = os.path.join(basedir, get_lib_filename())
@@ -26,7 +27,7 @@ c_int_p = POINTER(c_int)
 c_int_max = 2 ** (sizeof(c_int) * 8 - 1) - 1
 
 
-class AlgorithmParameters(Structure):
+class CAlgorithmParameters(Structure):
     _fields_ = [("nbGranular", c_int),
                 ("mu", c_int),
                 ("lambda", c_int),
@@ -40,10 +41,45 @@ class AlgorithmParameters(Structure):
                 ("nbIter", c_int),
                 ("timeLimit", c_double),
                 ("isRoundingInteger", c_char)]
+    #
+    # def __init__(self):
+    #     # HGS default values
+    #     super().__init__(20, 25, 40, 4, 5, 0.2, 1.20, 0.85, 0.5, 1, 20000, c_double(c_int_max), True)
 
-    def __init__(self):
-        # HGS default values
-        super().__init__(20, 25, 40, 4, 5, 0.2, 1.20, 0.85, 0.5, 1, 20000, c_double(c_int_max), True)
+
+@dataclass
+class AlgorithmParameters:
+    nbGranular: int = 20
+    mu: int = 25
+    lambda_: int = 40
+    nbElite: int = 4
+    nbClose: int = 5
+    targetFeasible: float = 0.2
+    penaltyIncrease: float = 1.2
+    penaltyDecrease: float = 0.85
+    repairProb: float = 0.5
+    seedRNG: int = 1
+    nbIter: int = 20000
+    timeLimit: float = c_double(c_int_max)
+    isRoundingInteger: bool = True
+
+    @property
+    def ctypes(self) -> CAlgorithmParameters:
+        return CAlgorithmParameters(
+            self.nbGranular,
+            self.mu,
+            self.lambda_,
+            self.nbElite,
+            self.nbClose,
+            self.targetFeasible,
+            self.penaltyIncrease,
+            self.penaltyDecrease,
+            self.repairProb,
+            self.seedRNG,
+            self.nbIter,
+            self.timeLimit,
+            self.isRoundingInteger
+        )
 
 
 class _SolutionRoute(Structure):
@@ -75,26 +111,26 @@ class RoutingSolution:
 
 class Solver:
     def __init__(self,
-                 algorithm_parameters: AlgorithmParameters,
-                 verbose: bool):
+                 parameters=AlgorithmParameters(),
+                 verbose=True):
         if platform.system() == "Windows":
             hgs_library = CDLL(HGS_LIBRARY_FILEPATH, winmode=0)
         else:
             hgs_library = CDLL(HGS_LIBRARY_FILEPATH)
 
-        self.algorithm_parameters = algorithm_parameters
+        self.algorithm_parameters = parameters
         self.verbose = verbose
 
         # solve_cvrp
         self._c_api_solve_cvrp = hgs_library.solve_cvrp
         self._c_api_solve_cvrp.argtypes = [c_int, c_double_p, c_double_p, c_double_p, c_double_p,
-                                           c_int, c_int, POINTER(AlgorithmParameters), c_char]
+                                           c_int, c_int, POINTER(CAlgorithmParameters), c_char]
         self._c_api_solve_cvrp.restype = POINTER(_Solution)
 
         # solve_cvrp_dist_mtx
         self._c_api_solve_cvrp_dist_mtx = hgs_library.solve_cvrp_dist_mtx
         self._c_api_solve_cvrp_dist_mtx.argtypes = [c_int, c_double_p, c_double_p, c_double_p, c_double_p, c_double_p,
-                                                    c_int, c_int, POINTER(AlgorithmParameters), c_char]
+                                                    c_int, c_int, POINTER(CAlgorithmParameters), c_char]
         self._c_api_solve_cvrp_dist_mtx.restype = POINTER(_Solution)
 
         # delete_solution
@@ -191,6 +227,7 @@ class Solver:
         y_ct = y_coords.astype(c_double).ctypes
         s_ct = service_times.astype(c_double).ctypes
         d_ct = demand.astype(c_double).ctypes
+        ap_ct = algorithm_parameters.ctypes
 
         sol_p = self._c_api_solve_cvrp(n_nodes,
                                        cast(x_ct, c_double_p),
@@ -199,7 +236,7 @@ class Solver:
                                        cast(d_ct, c_double_p),
                                        vehicle_capacity,
                                        maximum_number_of_vehicles,
-                                       byref(algorithm_parameters),
+                                       byref(ap_ct),
                                        verbose)
 
         result = RoutingSolution(sol_p)
@@ -224,6 +261,7 @@ class Solver:
         d_ct = demand.astype(c_double).ctypes
 
         m_ct = dist_mtx.reshape(n_nodes * n_nodes).astype(c_double).ctypes
+        ap_ct = algorithm_parameters.ctypes
 
         sol_p = self._c_api_solve_cvrp_dist_mtx(n_nodes,
                                                 cast(x_ct, c_double_p),
@@ -232,7 +270,7 @@ class Solver:
                                                 cast(s_ct, c_double_p),
                                                 cast(d_ct, c_double_p),
                                                 vehicle_capacity, maximum_number_of_vehicles,
-                                                byref(algorithm_parameters), verbose)
+                                                byref(ap_ct), verbose)
 
         result = RoutingSolution(sol_p)
         self._c_api_delete_sol(sol_p)

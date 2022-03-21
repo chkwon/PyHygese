@@ -83,9 +83,8 @@ def test_cvrp_inputs():
 
 
     # Solver initialization
-    ap = AlgorithmParameters()
-    ap.timeLimit = 1.1
-    hgs_solver = Solver(ap, True)
+    ap = AlgorithmParameters(timeLimit=1.1)
+    hgs_solver = Solver(parameters=ap, verbose=True)
 
     # Solve
     result = hgs_solver.solve_cvrp(data)
