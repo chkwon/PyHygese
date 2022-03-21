@@ -15,12 +15,6 @@ Installation requires a `C++` compiler and `cmake` tool.
 python3 -m pip install git+https://github.com/chkwon/hygese
 ```
 
-Example codes are found in `/examples`.
-
-```
-python3 examples/tsp.py
-python3 examples/cvrp.py
-```
 
 ## CVRP Example (random)
 ```python
