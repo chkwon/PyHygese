@@ -133,6 +133,25 @@ print(result.cost)
 print(result.routes)
 ```
 
+## Algorithm Parameters
+Configurable algorithm parameters are defined in the `AlgorithmParameters` dataclass with default values:
+```python
+@dataclass
+class AlgorithmParameters:
+    nbGranular: int = 20
+    mu: int = 25
+    lambda_: int = 40
+    nbElite: int = 4
+    nbClose: int = 5
+    targetFeasible: float = 0.2
+    penaltyIncrease: float = 1.2
+    penaltyDecrease: float = 0.85
+    repairProb: float = 0.5
+    seedRNG: int = 1
+    nbIter: int = 20000
+    timeLimit: float = 2147483647.0 # seconds
+    isRoundingInteger: bool = True
+```
 
 ## Others
 A Julia wrapper is available: [Hygese.jl](https://github.com/chkwon/Hygese.jl)

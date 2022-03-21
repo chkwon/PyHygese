@@ -60,7 +60,7 @@ class AlgorithmParameters:
     repairProb: float = 0.5
     seedRNG: int = 1
     nbIter: int = 20000
-    timeLimit: float = c_double(c_int_max)
+    timeLimit: float = c_double(c_int_max)  # 2147483647
     isRoundingInteger: bool = True
 
     @property
