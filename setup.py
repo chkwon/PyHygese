@@ -61,7 +61,7 @@ def download_build_hgs():
     urlretrieve(HGS_SRC, hgs_src_path)
     _run(f"tar xzvf {hgs_src_tarball_name}", LIB_DIR)
     _run("cmake -DCMAKE_BUILD_TYPE=Release ../HGS-CVRP-{}".format(HGS_VERSION), BUILD_DIR)
-    _run("make lib", BUILD_DIR)
+    _run("make hgscvrp", BUILD_DIR)
     _run(f"cp {LIB_FILENAME} ../../hygese/", BUILD_DIR)
 
 
