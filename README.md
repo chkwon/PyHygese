@@ -1,7 +1,7 @@
-# hygese
+# PyHygese
 
-[![Build Status](https://github.com/chkwon/hygese/workflows/CI/badge.svg?branch=master)](https://github.com/chkwon/hygese/actions/workflows/ci.yml?query=workflow%3ACI)
-[![codecov](https://codecov.io/gh/chkwon/hygese/branch/master/graph/badge.svg)](https://codecov.io/gh/chkwon/hygese)
+[![Build Status](https://github.com/chkwon/PyHygese/workflows/CI/badge.svg?branch=master)](https://github.com/chkwon/PyHygese/actions/workflows/ci.yml?query=workflow%3ACI)
+[![codecov](https://codecov.io/gh/chkwon/PyHygese/branch/master/graph/badge.svg)](https://codecov.io/gh/chkwon/PyHygese)
 
 *This package is under active development. It can introduce breaking changes anytime. Please use it at your own risk.*
 
@@ -12,7 +12,7 @@ This package provides a simple Python wrapper for the Hybrid Genetic Search solv
 Installation requires a `C++` compiler and `cmake` tool.
 
 ```
-python3 -m pip install git+https://github.com/chkwon/hygese
+python3 -m pip install git+https://github.com/chkwon/PyHygese
 ```
 
 
