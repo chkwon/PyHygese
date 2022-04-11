@@ -134,13 +134,15 @@ class Solver:
         self._c_api_delete_sol.argtypes = [POINTER(_Solution)]
 
     def solve_cvrp(self, data, rounding=True):
-        if data['depot'] != 0:
-            raise ValueError("In HGS, the depot location must be 0.")
-
         # required data
         demand = np.asarray(data['demands'])
-        n_nodes = len(demand)
         vehicle_capacity = data['vehicle_capacity']
+        n_nodes = len(demand)
+
+        # optional depot
+        depot = data.get('depot', 0)
+        if depot != 0:
+            raise ValueError("In HGS, the depot location must be 0.")
 
         # optional num_vehicles
         maximum_number_of_vehicles = data.get('num_vehicles', c_int_max)
