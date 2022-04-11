@@ -212,7 +212,7 @@ class Solver:
                                     self.algorithm_parameters,
                                     self.verbose)
 
-    def solve_tsp(self, data):
+    def solve_tsp(self, data, rounding=True):
         x_coords = data.get('x_coordinates')
         dist_mtx = data.get('distance_matrix')
         if dist_mtx is None:
@@ -225,9 +225,8 @@ class Solver:
         data['depot'] = 0
         data['demands'] = np.ones(n_nodes)
         data['vehicle_capacity'] = n_nodes
-        data['service_times'] = np.zeros(n_nodes)
 
-        return self.solve_cvrp(data)
+        return self.solve_cvrp(data, rounding=rounding)
 
     def _solve_cvrp(self,
                     x_coords: np.ndarray,
