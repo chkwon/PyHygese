@@ -1,7 +1,6 @@
 import numpy as np
 from hygese import AlgorithmParameters, Solver
 
-
 def test_cvrp():
     data = {}
     data['distance_matrix'] = [
@@ -71,16 +70,6 @@ def test_cvrp_inputs():
     data['depot'] = 0
     data['demands'] = [0, 1, 1, 2, 4, 2, 4, 8, 8, 1, 2, 1, 2, 4, 4, 8, 8]
     data['vehicle_capacity'] = 15  # different from OR-Tools: homogeneous capacity
-    # data['service_times'] = np.zeros(len(data['demands']))
-
-    n = len(data['distance_matrix'])
-    data['x_coordinates'] = np.random.rand(n) * 1000
-    data['y_coordinates'] = np.random.rand(n) * 1000
-    x = data['x_coordinates']
-    y = data['y_coordinates']
-
-
-
 
     # Solver initialization
     ap = AlgorithmParameters(timeLimit=1.1)
@@ -93,6 +82,21 @@ def test_cvrp_inputs():
     assert (result.cost == 6208)
 
 
+def test_cvrp_dist_mtx():
+    # Solver initialization
+    ap = AlgorithmParameters(timeLimit=1.1)
+    hgs_solver = Solver(parameters=ap, verbose=True)
+
+    data = {}
+    n = 17
+    x = np.random.rand(n) * 1000
+    y = np.random.rand(n) * 1000
+    data['x_coordinates'] = x
+    data['y_coordinates'] = y
+
+    data['depot'] = 0
+    data['demands'] = [0, 1, 1, 2, 4, 2, 4, 8, 8, 1, 2, 1, 2, 4, 4, 8, 8]
+    data['vehicle_capacity'] = 15  # different from OR-Tools: homogeneous capacity
 
     # Solve with calculated distances
     dist_mtx = np.zeros((n, n))
@@ -106,6 +110,6 @@ def test_cvrp_inputs():
 
     # solve without distance_matrix
     data.pop("distance_matrix", None)
-    result2 = hgs_solver.solve_cvrp(data)
-    assert (result1.cost == result2.cost)
+    result2 = hgs_solver.solve_cvrp(data, rounding=False)
+    assert abs(result1.cost - result2.cost) < 1e-3
 

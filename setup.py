@@ -27,8 +27,11 @@ def _safe_makedirs(*paths):
             pass
 
 
-HGS_VERSION = "0.1.0"
-HGS_SRC = f"https://github.com/chkwon/HGS-CVRP/archive/v{HGS_VERSION}.tar.gz"
+# HGS_VERSION = "0.1.0"
+# HGS_SRC = f"https://github.com/chkwon/HGS-CVRP/archive/v{HGS_VERSION}.tar.gz"
+
+HGS_VERSION = "f40c0a465f0df99db3e17c89bf8d9f2f3f0f383a"
+HGS_SRC = f"https://github.com/chkwon/HGS-CVRP/archive/{HGS_VERSION}.tar.gz"
 
 HGS_CVRP_URL = f"https://github.com/chkwon/HGS_CVRP_jll.jl/releases/download/HGS_CVRP-v{HGS_VERSION}%2B0"
 HGS_CVRP_WIN = f"{HGS_CVRP_URL}/libhgscvrp.v{HGS_VERSION}.x86_64-w64-mingw32-cxx11.tar.gz"
@@ -60,8 +63,8 @@ def download_build_hgs():
     hgs_src_path = pjoin(LIB_DIR, hgs_src_tarball_name)
     urlretrieve(HGS_SRC, hgs_src_path)
     _run(f"tar xzvf {hgs_src_tarball_name}", LIB_DIR)
-    _run("cmake -DCMAKE_BUILD_TYPE=Release ../HGS-CVRP-{}".format(HGS_VERSION), BUILD_DIR)
-    _run("make hgscvrp", BUILD_DIR)
+    _run("cmake -DCMAKE_BUILD_TYPE=Release -G 'Unix Makefiles' ../HGS-CVRP-{}".format(HGS_VERSION), BUILD_DIR)
+    _run("make lib", BUILD_DIR)
     _run(f"cp {LIB_FILENAME} ../../hygese/", BUILD_DIR)
 
 
@@ -90,11 +93,11 @@ setup(
     name='hygese',
     version='0.1',
     description='A Python wrapper for the HGS-CVRP solver',
-    url='https://github.com/chkwon/pyhgscvrp',
+    url='https://github.com/chkwon/PyHygese',
     author='Changhyun Kwon',
     author_email='chkwon@gmail.com',
     project_urls={
-        "Bug Tracker": "https://github.com/chkwon/pyhgscvrp/issues",
+        "Bug Tracker": "https://github.com/chkwon/PyHygese/issues",
     },
     classifiers=[
         "Programming Language :: Python :: 3",

@@ -3,7 +3,7 @@ import platform
 from ctypes import Structure, CDLL, POINTER, c_int, c_double, c_char, sizeof, cast, byref
 from dataclasses import dataclass
 import numpy as np
-
+import sys
 
 def get_lib_filename():
     if platform.system() == "Linux":
@@ -25,7 +25,7 @@ HGS_LIBRARY_FILEPATH = os.path.join(basedir, get_lib_filename())
 c_double_p = POINTER(c_double)
 c_int_p = POINTER(c_int)
 c_int_max = 2 ** (sizeof(c_int) * 8 - 1) - 1
-
+c_dbl_max = sys.float_info.max
 
 class CAlgorithmParameters(Structure):
     _fields_ = [("nbGranular", c_int),
@@ -34,13 +34,10 @@ class CAlgorithmParameters(Structure):
                 ("nbElite", c_int),
                 ("nbClose", c_int),
                 ("targetFeasible", c_double),
-                ("penaltyIncrease", c_double),
-                ("penaltyDecrease", c_double),
-                ("repairProb", c_double),
-                ("seedRNG", c_int),
+                ("seed", c_int),
                 ("nbIter", c_int),
                 ("timeLimit", c_double),
-                ("isRoundingInteger", c_char)]
+                ("useSwapStar", c_char)]
     #
     # def __init__(self):
     #     # HGS default values
@@ -55,13 +52,10 @@ class AlgorithmParameters:
     nbElite: int = 4
     nbClose: int = 5
     targetFeasible: float = 0.2
-    penaltyIncrease: float = 1.2
-    penaltyDecrease: float = 0.85
-    repairProb: float = 0.5
-    seedRNG: int = 1
+    seed: int = 1
     nbIter: int = 20000
-    timeLimit: float = c_double(c_int_max)  # 2147483647
-    isRoundingInteger: bool = True
+    timeLimit: float = c_dbl_max
+    useSwapStar: bool = True
 
     @property
     def ctypes(self) -> CAlgorithmParameters:
@@ -72,13 +66,10 @@ class AlgorithmParameters:
             self.nbElite,
             self.nbClose,
             self.targetFeasible,
-            self.penaltyIncrease,
-            self.penaltyDecrease,
-            self.repairProb,
-            self.seedRNG,
+            self.seed,
             self.nbIter,
             self.timeLimit,
-            self.isRoundingInteger
+            self.useSwapStar
         )
 
 
@@ -124,13 +115,17 @@ class Solver:
         # solve_cvrp
         self._c_api_solve_cvrp = hgs_library.solve_cvrp
         self._c_api_solve_cvrp.argtypes = [c_int, c_double_p, c_double_p, c_double_p, c_double_p,
-                                           c_int, c_int, POINTER(CAlgorithmParameters), c_char]
+                                           c_double, c_double, c_char, c_char,
+                                           c_int, POINTER(CAlgorithmParameters), c_char]
         self._c_api_solve_cvrp.restype = POINTER(_Solution)
 
         # solve_cvrp_dist_mtx
         self._c_api_solve_cvrp_dist_mtx = hgs_library.solve_cvrp_dist_mtx
-        self._c_api_solve_cvrp_dist_mtx.argtypes = [c_int, c_double_p, c_double_p, c_double_p, c_double_p, c_double_p,
-                                                    c_int, c_int, POINTER(CAlgorithmParameters), c_char]
+        self._c_api_solve_cvrp_dist_mtx.argtypes = [
+            c_int, c_double_p, c_double_p, c_double_p, c_double_p, c_double_p,
+            c_double, c_double, c_char, 
+            c_int, POINTER(CAlgorithmParameters), c_char
+        ]
         self._c_api_solve_cvrp_dist_mtx.restype = POINTER(_Solution)
 
         # delete_solution
@@ -138,7 +133,7 @@ class Solver:
         self._c_api_delete_sol.restype = None
         self._c_api_delete_sol.argtypes = [POINTER(_Solution)]
 
-    def solve_cvrp(self, data):
+    def solve_cvrp(self, data, rounding=True):
         if data['depot'] != 0:
             raise ValueError("In HGS, the depot location must be 0.")
 
@@ -146,14 +141,26 @@ class Solver:
         demand = np.asarray(data['demands'])
         n_nodes = len(demand)
         vehicle_capacity = data['vehicle_capacity']
-        maximum_number_of_vehicles = data['num_vehicles']
 
-        # optional service time
+        # optional num_vehicles
+        maximum_number_of_vehicles = data.get('num_vehicles', c_int_max)
+
+        # optional service_times
         service_times = data.get('service_times')
         if service_times is None:
             service_times = np.zeros(n_nodes)
         else:
             service_times = np.asarray(service_times)
+
+        # optional duration_limit
+        duration_limit = data.get('duration_limit')
+        if duration_limit is None:
+            is_duration_constraint = False
+            duration_limit = c_dbl_max
+        else:
+            is_duration_constraint = True
+
+        is_rounding_integer = rounding
 
         x_coords = data.get('x_coordinates')
         y_coords = data.get('y_coordinates')
@@ -183,6 +190,8 @@ class Solver:
                                              service_times,
                                              demand,
                                              vehicle_capacity,
+                                             duration_limit,
+                                             is_duration_constraint,
                                              maximum_number_of_vehicles,
                                              self.algorithm_parameters,
                                              self.verbose)
@@ -192,6 +201,9 @@ class Solver:
                                     service_times,
                                     demand,
                                     vehicle_capacity,
+                                    duration_limit,
+                                    is_rounding_integer,
+                                    is_duration_constraint,
                                     maximum_number_of_vehicles,
                                     self.algorithm_parameters,
                                     self.verbose)
@@ -219,6 +231,9 @@ class Solver:
                     service_times: np.ndarray,
                     demand: np.ndarray,
                     vehicle_capacity: int,
+                    duration_limit: float,
+                    is_rounding_integer: bool,
+                    is_duration_constraint: bool,
                     maximum_number_of_vehicles: int,
                     algorithm_parameters: AlgorithmParameters,
                     verbose: bool):
@@ -229,12 +244,20 @@ class Solver:
         d_ct = demand.astype(c_double).ctypes
         ap_ct = algorithm_parameters.ctypes
 
+
+        # struct Solution * solve_cvrp(
+        # 	int n, double* x, double* y, double* serv_time, double* dem,
+        # 	double vehicleCapacity, double durationLimit, char isRoundingInteger, char isDurationConstraint,
+        # 	int max_nbVeh, const struct AlgorithmParameters* ap, char verbose);    
         sol_p = self._c_api_solve_cvrp(n_nodes,
                                        cast(x_ct, c_double_p),
                                        cast(y_ct, c_double_p),
                                        cast(s_ct, c_double_p),
                                        cast(d_ct, c_double_p),
                                        vehicle_capacity,
+                                       duration_limit,
+                                       is_rounding_integer,
+                                       is_duration_constraint,
                                        maximum_number_of_vehicles,
                                        byref(ap_ct),
                                        verbose)
@@ -250,6 +273,8 @@ class Solver:
                              service_times: np.ndarray,
                              demand: np.ndarray,
                              vehicle_capacity: int,
+                             duration_limit: float,
+                             is_duration_constraint: bool,
                              maximum_number_of_vehicles: int,
                              algorithm_parameters: AlgorithmParameters,
                              verbose: bool):
@@ -263,13 +288,21 @@ class Solver:
         m_ct = dist_mtx.reshape(n_nodes * n_nodes).astype(c_double).ctypes
         ap_ct = algorithm_parameters.ctypes
 
+
+        # struct Solution *solve_cvrp_dist_mtx(
+        # 	int n, double* x, double* y, double *dist_mtx, double *serv_time, double *dem,
+        # 	double vehicleCapacity, double durationLimit, char isDurationConstraint,
+        # 	int max_nbVeh, const struct AlgorithmParameters *ap, char verbose);                
         sol_p = self._c_api_solve_cvrp_dist_mtx(n_nodes,
                                                 cast(x_ct, c_double_p),
                                                 cast(y_ct, c_double_p),
                                                 cast(m_ct, c_double_p),
                                                 cast(s_ct, c_double_p),
                                                 cast(d_ct, c_double_p),
-                                                vehicle_capacity, maximum_number_of_vehicles,
+                                                vehicle_capacity,
+                                                duration_limit,
+                                                is_duration_constraint,
+                                                maximum_number_of_vehicles,
                                                 byref(ap_ct), verbose)
 
         result = RoutingSolution(sol_p)
