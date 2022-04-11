@@ -1,5 +1,7 @@
 from hygese import AlgorithmParameters, Solver
-
+import random
+import elkai
+import numpy as np
 
 def test_tsp():
     data = dict()
@@ -29,3 +31,35 @@ def test_tsp():
     print(result.routes)
 
     assert (result.cost == 7293)
+
+
+def test_elkai():
+    for i in range(10):
+        n = random.randint(10, 70)
+        x = np.random.rand(n) * 1000
+        y = np.random.rand(n) * 1000
+
+        data = dict()
+        data['x_coordinates'] = x
+        data['y_coordinates'] = y
+
+        ap = AlgorithmParameters(timeLimit=1.1)
+        hgs_solver = Solver(parameters=ap, verbose=True)
+        result = hgs_solver.solve_tsp(data)
+
+        dist_mtx = np.zeros((n, n))
+        for i in range(n):
+            for j in range(n):
+                dist_mtx[i][j] = np.sqrt(
+                    np.square(x[i] - x[j]) + np.square(y[i] - y[j])
+                )
+        dist_mtx_int = np.rint(dist_mtx).astype(int)
+        route = elkai.solve_int_matrix(dist_mtx_int)
+
+        cost = 0
+        for i in range(n-1):
+            cost += dist_mtx_int[route[i], route[i+1]]
+
+        cost += dist_mtx_int[route[n-1], route[0]]
+
+        assert result.cost == cost
