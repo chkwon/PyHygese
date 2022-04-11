@@ -7,12 +7,14 @@ import platform
 from os.path import exists, join as pjoin
 import shutil
 
-try:
-    import urllib.request
+import urllib.request
+urlretrieve = urllib.request.urlretrieve
 
-    urlretrieve = urllib.request.urlretrieve
-except ImportError:  # python 2
-    from urllib import urlretrieve
+# try:
+#     import urllib.request
+#     urlretrieve = urllib.request.urlretrieve
+# except ImportError:  # python 2
+#     from urllib import urlretrieve
 
 
 def _run(cmd, cwd):
