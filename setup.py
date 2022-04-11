@@ -82,7 +82,8 @@ class BuildPyCommand(_build_py):
         print("Build!!!!!! Run!!!!")
 
         if platform.system() == "Windows":
-            download_binary_hgs()
+            # download_binary_hgs()
+            download_build_hgs()
         else:
             download_build_hgs()
 
