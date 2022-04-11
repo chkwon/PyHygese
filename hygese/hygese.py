@@ -5,6 +5,7 @@ from dataclasses import dataclass
 import numpy as np
 import sys
 
+
 def get_lib_filename():
     if platform.system() == "Linux":
         lib_ext = "so"
@@ -24,8 +25,9 @@ HGS_LIBRARY_FILEPATH = os.path.join(basedir, get_lib_filename())
 
 c_double_p = POINTER(c_double)
 c_int_p = POINTER(c_int)
-c_int_max = 2 ** (sizeof(c_int) * 8 - 1) - 1
-c_dbl_max = sys.float_info.max
+C_INT_MAX = 2 ** (sizeof(c_int) * 8 - 1) - 1
+C_DBL_MAX = sys.float_info.max
+
 
 class CAlgorithmParameters(Structure):
     _fields_ = [("nbGranular", c_int),
@@ -54,7 +56,7 @@ class AlgorithmParameters:
     targetFeasible: float = 0.2
     seed: int = 1
     nbIter: int = 20000
-    timeLimit: float = c_dbl_max
+    timeLimit: float = C_DBL_MAX
     useSwapStar: bool = True
 
     @property
@@ -123,7 +125,7 @@ class Solver:
         self._c_api_solve_cvrp_dist_mtx = hgs_library.solve_cvrp_dist_mtx
         self._c_api_solve_cvrp_dist_mtx.argtypes = [
             c_int, c_double_p, c_double_p, c_double_p, c_double_p, c_double_p,
-            c_double, c_double, c_char, 
+            c_double, c_double, c_char,
             c_int, POINTER(CAlgorithmParameters), c_char
         ]
         self._c_api_solve_cvrp_dist_mtx.restype = POINTER(_Solution)
@@ -145,7 +147,7 @@ class Solver:
             raise ValueError("In HGS, the depot location must be 0.")
 
         # optional num_vehicles
-        maximum_number_of_vehicles = data.get('num_vehicles', c_int_max)
+        maximum_number_of_vehicles = data.get('num_vehicles', C_INT_MAX)
 
         # optional service_times
         service_times = data.get('service_times')
@@ -158,7 +160,7 @@ class Solver:
         duration_limit = data.get('duration_limit')
         if duration_limit is None:
             is_duration_constraint = False
-            duration_limit = c_dbl_max
+            duration_limit = C_DBL_MAX
         else:
             is_duration_constraint = True
 
@@ -246,7 +248,6 @@ class Solver:
         d_ct = demand.astype(c_double).ctypes
         ap_ct = algorithm_parameters.ctypes
 
-
         # struct Solution * solve_cvrp(
         # 	int n, double* x, double* y, double* serv_time, double* dem,
         # 	double vehicleCapacity, double durationLimit, char isRoundingInteger, char isDurationConstraint,
@@ -289,7 +290,6 @@ class Solver:
 
         m_ct = dist_mtx.reshape(n_nodes * n_nodes).astype(c_double).ctypes
         ap_ct = algorithm_parameters.ctypes
-
 
         # struct Solution *solve_cvrp_dist_mtx(
         # 	int n, double* x, double* y, double *dist_mtx, double *serv_time, double *dem,

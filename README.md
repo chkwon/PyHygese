@@ -30,7 +30,7 @@ ap = AlgorithmParameters(timeLimit=3.2)  # seconds
 hgs_solver = Solver(parameters=ap, verbose=True)
 
 # data preparation
-data = {}
+data = dict()
 data['x_coordinates'] = x
 data['y_coordinates'] = y
 
@@ -40,9 +40,9 @@ data['y_coordinates'] = y
 # data['distance_matrix'] = dist_mtx
 
 data['service_times'] = np.zeros(n)
-demand = np.ones(n)
-demand[0] = 0 # depot demand = 0
-data['demands'] = demand
+demands = np.ones(n)
+demands[0] = 0 # depot demand = 0
+data['demands'] = demands
 data['vehicle_capacity'] = np.ceil(n/3).astype(int)
 data['num_vehicles'] = 3
 data['depot'] = 0
@@ -63,7 +63,7 @@ print(result.routes)
 from hygese import AlgorithmParameters, Solver
 import numpy as np 
 
-data = {}
+data = dict()
 data['distance_matrix'] = [
     [0, 548, 776, 696, 582, 274, 502, 194, 308, 194, 536, 502, 388, 354, 468, 776, 662],
     [548, 0, 684, 308, 194, 502, 730, 354, 696, 742, 1084, 594, 480, 674, 1016, 868, 1210],
@@ -106,7 +106,7 @@ print(result.routes)
 # A TSP example from https://developers.google.com/optimization/routing/tsp
 from hygese import AlgorithmParameters, Solver
 
-data = {}
+data = dict()
 data['distance_matrix'] = [
     [0, 2451, 713, 1018, 1631, 1374, 2408, 213, 2571, 875, 1420, 2145, 1972],
     [2451, 0, 1745, 1524, 831, 1240, 959, 2596, 403, 1589, 1374, 357, 579],
@@ -144,14 +144,12 @@ class AlgorithmParameters:
     nbElite: int = 4
     nbClose: int = 5
     targetFeasible: float = 0.2
-    penaltyIncrease: float = 1.2
-    penaltyDecrease: float = 0.85
-    repairProb: float = 0.5
-    seedRNG: int = 1
+    seed: int = 1
     nbIter: int = 20000
-    timeLimit: float = 2147483647.0 # seconds
-    isRoundingInteger: bool = True
+    timeLimit: float = C_DBL_MAX 
+    useSwapStar: bool = True
 ```
+where `C_DBL_MAX = sys.float_info.max`.
 
 ## Others
 A Julia wrapper is available: [Hygese.jl](https://github.com/chkwon/Hygese.jl)
