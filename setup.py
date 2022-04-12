@@ -35,8 +35,10 @@ def _safe_makedirs(*paths):
 HGS_VERSION = "f40c0a465f0df99db3e17c89bf8d9f2f3f0f383a"
 HGS_SRC = f"https://github.com/chkwon/HGS-CVRP/archive/{HGS_VERSION}.tar.gz"
 
-HGS_CVRP_URL = f"https://github.com/chkwon/HGS_CVRP_jll.jl/releases/download/HGS_CVRP-v{HGS_VERSION}%2B0"
-HGS_CVRP_WIN = f"{HGS_CVRP_URL}/libhgscvrp.v{HGS_VERSION}.x86_64-w64-mingw32-cxx11.tar.gz"
+
+LIB_VERSION = "0.0.1"
+HGS_CVRP_WIN = f"https://github.com/chkwon/Libhgscvrp_jll.jl/releases/download/libhgscvrp-v{LIB_VERSION}%2B0/" + \
+                f"libhgscvrp.v{LIB_VERSION}.x86_64-w64-mingw32-cxx11.tar.gz"
 
 LIB_DIR = "lib"
 BUILD_DIR = "lib/build"
@@ -71,6 +73,8 @@ def download_build_hgs():
 
 
 def download_binary_hgs():
+    print(HGS_CVRP_WIN)
+
     _safe_makedirs(LIB_DIR)
     dll_tarball_name = "win_bin.tar.gz"
     hgs_bin_path = pjoin(LIB_DIR, dll_tarball_name)
@@ -84,8 +88,8 @@ class BuildPyCommand(_build_py):
         print("Build!!!!!! Run!!!!")
 
         if platform.system() == "Windows":
-            # download_binary_hgs()
-            download_build_hgs()
+            download_binary_hgs()
+            # download_build_hgs()
         else:
             download_build_hgs()
 
@@ -94,7 +98,7 @@ class BuildPyCommand(_build_py):
 
 setup(
     name='hygese',
-    version='0.1',
+    version='0.0.0.4',
     description='A Python wrapper for the HGS-CVRP solver',
     url='https://github.com/chkwon/PyHygese',
     author='Changhyun Kwon',
