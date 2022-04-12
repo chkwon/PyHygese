@@ -94,7 +94,7 @@ class BuildPyCommand(_build_py):
 
 setup(
     name='hygese',
-    version='0.1',
+    version='0.0.0.1',
     description='A Python wrapper for the HGS-CVRP solver',
     url='https://github.com/chkwon/PyHygese',
     author='Changhyun Kwon',
