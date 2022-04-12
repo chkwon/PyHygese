@@ -9,7 +9,7 @@
 
 This package provides a simple Python wrapper for the Hybrid Genetic Search solver for Capacitated Vehicle Routing Problems [(HGS-CVRP)](https://github.com/vidalt/HGS-CVRP) through [a C interface](https://github.com/chkwon/HGS-CVRP).
 
-Installation requires a `C++` compiler and `cmake` tool.
+Installation requires a `C++` compiler and `cmake` tool. (For Windows: `scoop install git cmake gcc`)
 
 ```
 python3 -m pip install git+https://github.com/chkwon/PyHygese
