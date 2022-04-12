@@ -36,10 +36,9 @@ HGS_VERSION = "f40c0a465f0df99db3e17c89bf8d9f2f3f0f383a"
 HGS_SRC = f"https://github.com/chkwon/HGS-CVRP/archive/{HGS_VERSION}.tar.gz"
 
 
-# LIB_VERSION = "0.1.0"
-# HGS_CVRP_URL = f"https://github.com/chkwon/Libhgscvrp_jll.jl/releases/download/libhgscvrp-v{LIB_VERSION}%2B0"
-# HGS_CVRP_WIN = f"{HGS_CVRP_URL}/libhgscvrp.v{LIB_VERSION}.x86_64-w64-mingw32-cxx11.tar.gz"
-HGS_CVRP_WIN = "https://github.com/chkwon/Libhgscvrp_jll.jl/releases/download/libhgscvrp-v0.0.1%2B0/libhgscvrp.v0.0.1.x86_64-w64-mingw32-cxx11.tar.gz"
+LIB_VERSION = "0.1.0"
+HGS_CVRP_WIN = f"https://github.com/chkwon/Libhgscvrp_jll.jl/releases/download/libhgscvrp-v{LIB_VERSION}%2B0/" + \
+                f"libhgscvrp.v{LIB_VERSION}.x86_64-w64-mingw32-cxx11.tar.gz"
 
 
 
