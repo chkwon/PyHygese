@@ -75,6 +75,8 @@ def download_build_hgs():
 
 
 def download_binary_hgs():
+    print(HGS_CVRP_WIN)
+
     _safe_makedirs(LIB_DIR)
     dll_tarball_name = "win_bin.tar.gz"
     hgs_bin_path = pjoin(LIB_DIR, dll_tarball_name)
