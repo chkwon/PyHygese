@@ -37,6 +37,7 @@ HGS_SRC = f"https://github.com/chkwon/HGS-CVRP/archive/{HGS_VERSION}.tar.gz"
 
 HGS_CVRP_URL = f"https://github.com/chkwon/HGS_CVRP_jll.jl/releases/download/HGS_CVRP-v{HGS_VERSION}%2B0"
 HGS_CVRP_WIN = f"{HGS_CVRP_URL}/libhgscvrp.v{HGS_VERSION}.x86_64-w64-mingw32-cxx11.tar.gz"
+HGS_CVRP_WIN = "https://github.com/chkwon/HGS-CVRP/suites/6085969291/artifacts/210833023"
 
 LIB_DIR = "lib"
 BUILD_DIR = "lib/build"
@@ -84,8 +85,8 @@ class BuildPyCommand(_build_py):
         print("Build!!!!!! Run!!!!")
 
         if platform.system() == "Windows":
-            # download_binary_hgs()
-            download_build_hgs()
+            download_binary_hgs()
+            # download_build_hgs()
         else:
             download_build_hgs()
 
