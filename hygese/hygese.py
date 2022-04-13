@@ -107,7 +107,7 @@ class Solver:
                  parameters=AlgorithmParameters(),
                  verbose=True):
         if platform.system() == "Windows":
-            hgs_library = CDLL(HGS_LIBRARY_FILEPATH, winmode=1)
+            hgs_library = CDLL(HGS_LIBRARY_FILEPATH, winmode=0)
         else:
             hgs_library = CDLL(HGS_LIBRARY_FILEPATH)
 
