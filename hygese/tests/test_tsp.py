@@ -1,7 +1,7 @@
 from hygese import AlgorithmParameters, Solver
-import random
-import elkai
-import numpy as np
+# import random
+# import elkai
+# import numpy as np
 
 def test_tsp():
     data = dict()
