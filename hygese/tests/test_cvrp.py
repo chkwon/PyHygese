@@ -61,7 +61,7 @@ def test_cvrp_inputs():
 
 def test_cvrp_dist_mtx():
     # Solver initialization
-    ap = AlgorithmParameters(timeLimit=1.1)
+    ap = AlgorithmParameters(timeLimit=3.1)
     hgs_solver = Solver(parameters=ap, verbose=True)
 
     data = dict()
