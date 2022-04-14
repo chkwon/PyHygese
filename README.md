@@ -7,7 +7,7 @@
 
 **A solver for the Capacitated Vehicle Routing Problem (CVRP)**
 
-This package provides a simple Python wrapper for the Hybrid Genetic Search solver for Capacitated Vehicle Routing Problems [(HGS-CVRP)](https://github.com/vidalt/HGS-CVRP) through [a C interface](https://github.com/chkwon/HGS-CVRP).
+This package provides a simple Python wrapper for the Hybrid Genetic Search solver for Capacitated Vehicle Routing Problems [(HGS-CVRP)](https://github.com/vidalt/HGS-CVRP).
 
 Installation requires `git`, `gcc`, `make`, and `cmake`. 
 On Windows, for example, you can install them by `scoop install git gcc make cmake` using [Scoop](scoop.sh).
