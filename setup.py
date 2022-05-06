@@ -32,13 +32,13 @@ def _safe_makedirs(*paths):
 # HGS_VERSION = "0.1.0"
 # HGS_SRC = f"https://github.com/chkwon/HGS-CVRP/archive/v{HGS_VERSION}.tar.gz"
 
-HGS_VERSION = "f40c0a465f0df99db3e17c89bf8d9f2f3f0f383a"
-HGS_SRC = f"https://github.com/chkwon/HGS-CVRP/archive/{HGS_VERSION}.tar.gz"
+HGS_VERSION = "57c59653cfb8143cdb95a3d087b445257f815e1f"
+HGS_SRC = f"https://github.com/vidalt/HGS-CVRP/archive/{HGS_VERSION}.tar.gz"
 
 
-LIB_VERSION = "0.0.1"
-HGS_CVRP_WIN = f"https://github.com/chkwon/Libhgscvrp_jll.jl/releases/download/libhgscvrp-v{LIB_VERSION}%2B0/" + \
-                f"libhgscvrp.v{LIB_VERSION}.x86_64-w64-mingw32-cxx11.tar.gz"
+# LIB_VERSION = "0.0.1"
+# HGS_CVRP_WIN = f"https://github.com/chkwon/Libhgscvrp_jll.jl/releases/download/libhgscvrp-v{LIB_VERSION}%2B0/" + \
+#                 f"libhgscvrp.v{LIB_VERSION}.x86_64-w64-mingw32-cxx11.tar.gz"
 
 LIB_DIR = "lib"
 BUILD_DIR = "lib/build"
@@ -73,15 +73,15 @@ def download_build_hgs():
     shutil.copyfile(f"{BUILD_DIR}/{LIB_FILENAME}", f"hygese/{LIB_FILENAME}")
 
 
-def download_binary_hgs():
-    print(HGS_CVRP_WIN)
+# def download_binary_hgs():
+#     print(HGS_CVRP_WIN)
 
-    _safe_makedirs(LIB_DIR)
-    dll_tarball_name = "win_bin.tar.gz"
-    hgs_bin_path = pjoin(LIB_DIR, dll_tarball_name)
-    urlretrieve(HGS_CVRP_WIN, hgs_bin_path)
-    _run(f"tar xzvf {dll_tarball_name}", LIB_DIR)
-    shutil.copyfile(f"{BIN_DIR}/{LIB_FILENAME}", f"hygese/{LIB_FILENAME}")
+#     _safe_makedirs(LIB_DIR)
+#     dll_tarball_name = "win_bin.tar.gz"
+#     hgs_bin_path = pjoin(LIB_DIR, dll_tarball_name)
+#     urlretrieve(HGS_CVRP_WIN, hgs_bin_path)
+#     _run(f"tar xzvf {dll_tarball_name}", LIB_DIR)
+#     shutil.copyfile(f"{BIN_DIR}/{LIB_FILENAME}", f"hygese/{LIB_FILENAME}")
 
 
 class BuildPyCommand(_build_py):
@@ -99,7 +99,7 @@ class BuildPyCommand(_build_py):
 
 setup(
     name='hygese',
-    version='0.0.0.4',
+    version='0.0.0.5',
     description='A Python wrapper for the HGS-CVRP solver',
     url='https://github.com/chkwon/PyHygese',
     author='Changhyun Kwon',

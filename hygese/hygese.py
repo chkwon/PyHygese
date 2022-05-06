@@ -29,6 +29,7 @@ C_INT_MAX = 2 ** (sizeof(c_int) * 8 - 1) - 1
 C_DBL_MAX = sys.float_info.max
 
 
+# Must match with AlgorithmParameters.h in HGS-CVRP: https://github.com/vidalt/HGS-CVRP
 class CAlgorithmParameters(Structure):
     _fields_ = [("nbGranular", c_int),
                 ("mu", c_int),
@@ -39,12 +40,7 @@ class CAlgorithmParameters(Structure):
                 ("seed", c_int),
                 ("nbIter", c_int),
                 ("timeLimit", c_double),
-                ("useSwapStar", c_char)]
-    #
-    # def __init__(self):
-    #     # HGS default values
-    #     super().__init__(20, 25, 40, 4, 5, 0.2, 1.20, 0.85, 0.5, 1, 20000, c_double(c_int_max), True)
-
+                ("useSwapStar", c_int)]
 
 @dataclass
 class AlgorithmParameters:
@@ -54,9 +50,9 @@ class AlgorithmParameters:
     nbElite: int = 4
     nbClose: int = 5
     targetFeasible: float = 0.2
-    seed: int = 1
+    seed: int = 0
     nbIter: int = 20000
-    timeLimit: float = C_DBL_MAX
+    timeLimit: float = 0.0
     useSwapStar: bool = True
 
     @property
@@ -71,7 +67,7 @@ class AlgorithmParameters:
             self.seed,
             self.nbIter,
             self.timeLimit,
-            self.useSwapStar
+            int(self.useSwapStar)
         )
 
 
