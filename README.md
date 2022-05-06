@@ -147,10 +147,9 @@ class AlgorithmParameters:
     targetFeasible: float = 0.2
     seed: int = 1
     nbIter: int = 20000
-    timeLimit: float = C_DBL_MAX 
+    timeLimit: float = 0.0
     useSwapStar: bool = True
 ```
-where `C_DBL_MAX = sys.float_info.max`.
 
 ## Others
 A Julia wrapper is available: [Hygese.jl](https://github.com/chkwon/Hygese.jl)
