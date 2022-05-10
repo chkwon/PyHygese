@@ -24,15 +24,15 @@ python3 -m pip install git+https://github.com/chkwon/PyHygese
 ## CVRP Example (random)
 ```python
 import numpy as np 
-from hygese import AlgorithmParameters, Solver
+import hygese as hgs
 
 n = 20
 x = (np.random.rand(n) * 1000)
 y = (np.random.rand(n) * 1000)
 
 # Solver initialization
-ap = AlgorithmParameters(timeLimit=3.2)  # seconds
-hgs_solver = Solver(parameters=ap, verbose=True)
+ap = hgs.AlgorithmParameters(timeLimit=3.2)  # seconds
+hgs_solver = hgs.Solver(parameters=ap, verbose=True)
 
 # data preparation
 data = dict()
@@ -65,8 +65,8 @@ print(result.routes)
 
 ```python
 # A CVRP from https://developers.google.com/optimization/routing/cvrp
-from hygese import AlgorithmParameters, Solver
 import numpy as np 
+import hygese as hgs 
 
 data = dict()
 data['distance_matrix'] = [
@@ -95,8 +95,8 @@ data['vehicle_capacity'] = 15  # different from OR-Tools: homogeneous capacity
 data['service_times'] = np.zeros(len(data['demands']))
 
 # Solver initialization
-ap = AlgorithmParameters(timeLimit=3.2)  # seconds
-hgs_solver = Solver(parameters=ap, verbose=True)
+ap = hgs.AlgorithmParameters(timeLimit=3.2)  # seconds
+hgs_solver = hgs.Solver(parameters=ap, verbose=True)
 
 # Solve
 result = hgs_solver.solve_cvrp(data)
@@ -109,7 +109,7 @@ print(result.routes)
 
 ```python
 # A TSP example from https://developers.google.com/optimization/routing/tsp
-from hygese import AlgorithmParameters, Solver
+import hygese as hgs 
 
 data = dict()
 data['distance_matrix'] = [
@@ -129,8 +129,8 @@ data['distance_matrix'] = [
 ] 
 
 # Solver initialization
-ap = AlgorithmParameters(timeLimit=0.8)  # seconds
-hgs_solver = Solver(parameters=ap, verbose=True)
+ap = hgs.AlgorithmParameters(timeLimit=0.8)  # seconds
+hgs_solver = hgs.Solver(parameters=ap, verbose=True)
 
 # Solve
 result = hgs_solver.solve_tsp(data)
