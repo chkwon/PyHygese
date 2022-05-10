@@ -36,16 +36,8 @@ def _safe_makedirs(*paths):
             pass
 
 
-# HGS_VERSION = "0.1.0"
-# HGS_SRC = f"https://github.com/chkwon/HGS-CVRP/archive/v{HGS_VERSION}.tar.gz"
-
-HGS_VERSION = "57c59653cfb8143cdb95a3d087b445257f815e1f"
-HGS_SRC = f"https://github.com/vidalt/HGS-CVRP/archive/{HGS_VERSION}.tar.gz"
-
-
-# LIB_VERSION = "0.0.1"
-# HGS_CVRP_WIN = f"https://github.com/chkwon/Libhgscvrp_jll.jl/releases/download/libhgscvrp-v{LIB_VERSION}%2B0/" + \
-#                 f"libhgscvrp.v{LIB_VERSION}.x86_64-w64-mingw32-cxx11.tar.gz"
+HGS_VERSION = "2.0.0"
+HGS_SRC = f"https://github.com/vidalt/HGS-CVRP/archive/v{HGS_VERSION}.tar.gz"
 
 LIB_DIR = "lib"
 BUILD_DIR = "lib/build"
@@ -74,11 +66,15 @@ def download_build_hgs():
     hgs_src_path = pjoin(LIB_DIR, hgs_src_tarball_name)
     urlretrieve(HGS_SRC, hgs_src_path)
     _run(f"tar xzvf {hgs_src_tarball_name}", LIB_DIR)
-    _run("cmake -DCMAKE_BUILD_TYPE=Release -G \"Unix Makefiles\" ../HGS-CVRP-{}".format(HGS_VERSION), BUILD_DIR)
+    _run(f"cmake -DCMAKE_BUILD_TYPE=Release -G \"Unix Makefiles\" ../HGS-CVRP-{HGS_VERSION}", BUILD_DIR)
     _run("make lib", BUILD_DIR)
 
     shutil.copyfile(f"{BUILD_DIR}/{LIB_FILENAME}", f"hygese/{LIB_FILENAME}")
 
+
+# LIB_VERSION = "0.0.1"
+# HGS_CVRP_WIN = f"https://github.com/chkwon/Libhgscvrp_jll.jl/releases/download/libhgscvrp-v{LIB_VERSION}%2B0/" + \
+#                 f"libhgscvrp.v{LIB_VERSION}.x86_64-w64-mingw32-cxx11.tar.gz"
 
 # def download_binary_hgs():
 #     print(HGS_CVRP_WIN)
@@ -106,7 +102,7 @@ class BuildPyCommand(_build_py):
 
 setup(
     name='hygese',
-    version='0.0.0.7',
+    version='0.0.0.8',
     description='A Python wrapper for the HGS-CVRP solver',
     long_description=long_description,
     long_description_content_type='text/markdown',
