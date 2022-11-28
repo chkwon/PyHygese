@@ -8,6 +8,7 @@ from os.path import exists, join as pjoin
 import shutil
 
 import urllib.request
+
 urlretrieve = urllib.request.urlretrieve
 
 # try:
@@ -17,9 +18,9 @@ urlretrieve = urllib.request.urlretrieve
 #     from urllib import urlretrieve
 
 
-
 # read the contents of your README file
 from pathlib import Path
+
 this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 
@@ -66,7 +67,10 @@ def download_build_hgs():
     hgs_src_path = pjoin(LIB_DIR, hgs_src_tarball_name)
     urlretrieve(HGS_SRC, hgs_src_path)
     _run(f"tar xzvf {hgs_src_tarball_name}", LIB_DIR)
-    _run(f"cmake -DCMAKE_BUILD_TYPE=Release -G \"Unix Makefiles\" ../HGS-CVRP-{HGS_VERSION}", BUILD_DIR)
+    _run(
+        f'cmake -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles" ../HGS-CVRP-{HGS_VERSION}',
+        BUILD_DIR,
+    )
     _run("make lib", BUILD_DIR)
 
     shutil.copyfile(f"{BUILD_DIR}/{LIB_FILENAME}", f"hygese/{LIB_FILENAME}")
@@ -101,14 +105,14 @@ class BuildPyCommand(_build_py):
 
 
 setup(
-    name='hygese',
-    version='0.0.0.8',
-    description='A Python wrapper for the HGS-CVRP solver',
+    name="hygese",
+    version="0.0.0.8",
+    description="A Python wrapper for the HGS-CVRP solver",
     long_description=long_description,
-    long_description_content_type='text/markdown',
-    url='https://github.com/chkwon/PyHygese',
-    author='Changhyun Kwon',
-    author_email='chkwon@gmail.com',
+    long_description_content_type="text/markdown",
+    url="https://github.com/chkwon/PyHygese",
+    author="Changhyun Kwon",
+    author_email="chkwon@gmail.com",
     project_urls={
         "Bug Tracker": "https://github.com/chkwon/PyHygese/issues",
     },
