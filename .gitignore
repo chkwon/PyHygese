@@ -1,4 +1,5 @@
 deps/
+usr
 wrapper.c
 
 build_tmp/
