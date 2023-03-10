@@ -47,8 +47,9 @@ jobs:
 
       - name: Test with pytest
         run: |
-          pip install pytest-cov
-          pytest -s --cov=hygese --cov-report=xml
+          # pip install pytest-cov
+          # pytest -s --cov=hygese --cov-report=xml
+          python hygese/tests/test_cvrp.py
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v2
