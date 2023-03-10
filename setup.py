@@ -53,8 +53,8 @@ def get_lib_filename():
     return f"libhgscvrp.{lib_ext}"
 
 
-# LIB_FILENAME = get_lib_filename()
 LIB_FILENAME = "libhgscvrp.a"
+LIB_FILENAME = get_lib_filename()
 
 
 def convert_shared_to_static():
@@ -76,7 +76,7 @@ def download_build_hgs():
     hgs_src_path = pjoin(DEPS_DIR, hgs_src_tarball_name)
     urlretrieve(HGS_SRC, hgs_src_path)
     _run(f"tar xzvf {hgs_src_tarball_name}", DEPS_DIR)
-    convert_shared_to_static()
+    # convert_shared_to_static()
     _run(
         f'cmake -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles" ../HGS-CVRP-{HGS_VERSION}',
         BUILD_DIR,
