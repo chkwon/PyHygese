@@ -42,9 +42,9 @@ jobs:
 
       - name: Install and Build
         run: |
+          python setup.py build
           python setup.py build_ext --inplace
           pip install .
-          # python setup.py build
 
       - name: Test with pytest
         run: |
