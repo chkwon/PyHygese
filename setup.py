@@ -120,5 +120,8 @@ setup(
     package_data={
         "": ["libhgscvrp.*"],
     },
-    install_requires=["numpy"],
+    install_requires=[
+        "Cython>=0.29.0",
+        "numpy>=1.23.0",
+    ],
 )
