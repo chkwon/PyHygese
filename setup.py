@@ -83,7 +83,7 @@ def download_build_hgs():
     )
     _run("make lib", BUILD_DIR)
 
-    shutil.copyfile(f"{BUILD_DIR}/{LIB_FILENAME}", f"hygese/{LIB_FILENAME}")
+    # shutil.copyfile(f"{BUILD_DIR}/{LIB_FILENAME}", f"hygese/{LIB_FILENAME}")
     
 
 class BuildPyCommand(_build_py):
@@ -101,7 +101,7 @@ extentions = [
         language="c",
         # library_dirs = ["hygese"],
         # libraries = ["hgscvrp"],
-        extra_objects = [f"hygese/{LIB_FILENAME}"]
+        extra_objects = [f"{BUILD_DIR}/{LIB_FILENAME}"]
     )
 ]
 
