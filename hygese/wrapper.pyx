@@ -54,35 +54,6 @@ cdef get_solution_py(Solution *sol_c):
     sol_py = RoutingSolution(sol_c.cost, sol_c.time, sol_c.n_routes, routes_py)
     return sol_py
 
-# cdef get_algorithm_parameters(
-#     int nbGranular, 
-#     int mu,
-#     int lambda_, 
-#     int nbElite, 
-#     int nbClose, 
-#     double targetFeasible,
-#     int seed, 
-#     int nbIter, 
-#     double timeLimit, 
-#     int useSwapStar, 
-# ):
-#     # Create an instance of AlgorithmParameters C struct and set its values
-#     cdef AlgorithmParameters ap
-
-#     ap.nbGranular = nbGranular
-#     ap.mu = mu
-#     ap.lambda_ = lambda_
-#     ap.nbElite = nbElite
-#     ap.nbClose = nbClose
-#     ap.targetFeasible = targetFeasible
-#     ap.seed = seed
-#     ap.nbIter = nbIter
-#     ap.timeLimit = timeLimit
-#     ap.useSwapStar = useSwapStar
-
-#     return ap
-
-
 
 def _solve_cvrp_dist_mtx(
     double[:] x,

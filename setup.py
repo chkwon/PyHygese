@@ -117,9 +117,11 @@ setup(
         "build_py": BuildPyCommand,
     },
     ext_modules=cythonize(extentions),    
-    package_data={
-        "": ["libhgscvrp.*"],
-    },
+    data_files=[("lib", [f"hygese/{LIB_FILENAME}"])],
+    # include_package_data=True,    
+    # package_data={
+    #     "": ["libhgscvrp.*"],
+    # },
     install_requires=[
         "Cython>=0.29.0",
         "numpy>=1.23.0",
