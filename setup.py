@@ -43,15 +43,27 @@ BIN_DIR = "deps/bin"
 
 
 def get_lib_filename():
-    if platform.system() == "Linux":
+    sysname = platform.system()
+    if sysname == "Linux":
         lib_ext = "so"
-    elif platform.system() == "Darwin":
+    elif sysname == "Darwin":
         lib_ext = "dylib"
-    elif platform.system() == "Windows":
+    elif sysname == "Windows":
         lib_ext = "dll"
     else:
-        lib_ext = "so"
+        raise ValueError("Unknown platform: " + sysname)
     return f"libhgscvrp.{lib_ext}"
+
+def get_rpath_arg():
+    sysname = platform.system()
+    if sysname == "Linux":
+        return "-Wl,-rpath,$ORIGIN/usr/local/lib"
+    elif sysname == "Darwin":
+        return "-Wl,-rpath,@loader_path/usr/local/lib"
+    elif sysname == "Windows":
+        return ""
+    else:
+        raise ValueError("Unknown platform: " + sysname)
 
 
 LIB_FILENAME = get_lib_filename()
@@ -91,7 +103,7 @@ extentions = [
         include_dirs = ["hygese/usr/local/include"],
         library_dirs = ["hygese/usr/local/lib"],
         libraries = ["hgscvrp"],
-        extra_link_args = ["-Wl,-rpath,$ORIGIN/usr/local/lib"]
+        extra_link_args = [get_rpath_arg()]
     )
 ]
 
