@@ -37,7 +37,7 @@ def _safe_makedirs(*paths):
 HGS_VERSION = "2.0.0"
 HGS_SRC = f"https://github.com/vidalt/HGS-CVRP/archive/v{HGS_VERSION}.tar.gz"
 
-LIB_DIR = "deps"
+DEPS_DIR = "deps"
 BUILD_DIR = "deps/build"
 BIN_DIR = "deps/bin"
 
@@ -51,19 +51,32 @@ def get_lib_filename():
         lib_ext = "dll"
     else:
         lib_ext = "so"
+        
+    lib_ext = "a"
     return f"libhgscvrp.{lib_ext}"
 
 
 LIB_FILENAME = get_lib_filename()
 
 
+def convert_shared_to_static():
+    with open(f"{DEPS_DIR}/HGS-CVRP-{HGS_VERSION}/CMakeLists.txt", "r") as f:
+        lines = f.read()
+        
+    new_lines = lines.replace("SHARED", "STATIC")
+    
+    with open(f"{DEPS_DIR}/HGS-CVRP-{HGS_VERSION}/CMakeLists.txt", "w") as f:
+        f.write(new_lines)
+
+
 def download_build_hgs():
-    _safe_makedirs(LIB_DIR)
+    _safe_makedirs(DEPS_DIR)
     _safe_makedirs(BUILD_DIR)
     hgs_src_tarball_name = "{}.tar.gz".format(HGS_VERSION)
-    hgs_src_path = pjoin(LIB_DIR, hgs_src_tarball_name)
+    hgs_src_path = pjoin(DEPS_DIR, hgs_src_tarball_name)
     urlretrieve(HGS_SRC, hgs_src_path)
-    _run(f"tar xzvf {hgs_src_tarball_name}", LIB_DIR)
+    _run(f"tar xzvf {hgs_src_tarball_name}", DEPS_DIR)
+    convert_shared_to_static()
     _run(
         f'cmake -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles" ../HGS-CVRP-{HGS_VERSION}',
         BUILD_DIR,
@@ -71,7 +84,7 @@ def download_build_hgs():
     _run("make lib", BUILD_DIR)
 
     shutil.copyfile(f"{BUILD_DIR}/{LIB_FILENAME}", f"hygese/{LIB_FILENAME}")
-
+    
 
 class BuildPyCommand(_build_py):
     def run(self):
@@ -85,8 +98,10 @@ extentions = [
         name="hygese.wrapper",
         sources=["hygese/wrapper.pyx"],
         include_dirs = [f"deps/HGS-CVRP-{HGS_VERSION}/Program/"],
-        library_dirs = ["hygese"],
-        libraries = ["hgscvrp"],
+        language="c",
+        # library_dirs = ["hygese"],
+        # libraries = ["hgscvrp"],
+        extra_objects = [f"hygese/{LIB_FILENAME}"]
     )
 ]
 
@@ -117,7 +132,7 @@ setup(
         "build_py": BuildPyCommand,
     },
     ext_modules=cythonize(extentions),    
-    data_files=[("lib", [f"hygese/{LIB_FILENAME}"])],
+    # data_files=[("lib", [f"hygese/{LIB_FILENAME}"])],
     # include_package_data=True,    
     # package_data={
     #     "": ["libhgscvrp.*"],
