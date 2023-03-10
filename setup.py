@@ -69,8 +69,9 @@ def download_build_hgs():
         BUILD_DIR,
     )
     _run("make lib", BUILD_DIR)
+    _run("make DESTDIR=../../hygese install", BUILD_DIR)
 
-    shutil.copyfile(f"{BUILD_DIR}/{LIB_FILENAME}", f"hygese/{LIB_FILENAME}")
+    # shutil.copyfile(f"{BUILD_DIR}/{LIB_FILENAME}", f"hygese/{LIB_FILENAME}")
 
 
 class BuildPyCommand(_build_py):
@@ -80,13 +81,17 @@ class BuildPyCommand(_build_py):
 
 
 
+
+CDIR = os.path.dirname(os.path.abspath(__file__))
+
 extentions = [
     Extension(
         name="hygese.wrapper",
         sources=["hygese/wrapper.pyx"],
-        include_dirs = [f"deps/HGS-CVRP-{HGS_VERSION}/Program/"],
-        library_dirs = ["hygese"],
+        include_dirs = ["hygese/usr/local/include"],
+        library_dirs = ["hygese/usr/local/lib"],
         libraries = ["hgscvrp"],
+        extra_link_args = ["-Wl,-rpath,$ORIGIN/usr/local/lib"]
     )
 ]
 
@@ -116,12 +121,12 @@ setup(
     cmdclass={
         "build_py": BuildPyCommand,
     },
-    ext_modules=cythonize(extentions),    
-    data_files=[("lib", [f"hygese/{LIB_FILENAME}"])],
-    # include_package_data=True,    
-    # package_data={
-    #     "": ["libhgscvrp.*"],
-    # },
+    ext_modules=extentions,    
+    # data_files=[("lib", [f"hygese/{LIB_FILENAME}"])],
+    include_package_data=True,    
+    package_data={
+        "hygese": ["usr/local/lib/*.so", "usr/local/lib/*.dylib", "usr/local/include/*.h"],
+    },
     install_requires=[
         "Cython>=0.29.0",
         "numpy>=1.23.0",
