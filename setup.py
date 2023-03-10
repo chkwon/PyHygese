@@ -69,6 +69,12 @@ def convert_shared_to_static():
         f.write("set(CMAKE_POSITION_INDEPENDENT_CODE ON)")
 
 
+def get_extra_link_args():
+    if platform.system() == 'Windows':
+        return []
+    else:
+        return ["-Wl,-rpath=$ORIGIN/../deps/build/."]
+    
 def download_build_hgs():
     _safe_makedirs(DEPS_DIR)
     _safe_makedirs(BUILD_DIR)
@@ -82,6 +88,7 @@ def download_build_hgs():
         BUILD_DIR,
     )
     _run("make lib", BUILD_DIR)
+    _run("make install", BUILD_DIR)
 
     # shutil.copyfile(f"{BUILD_DIR}/{LIB_FILENAME}", f"hygese/{LIB_FILENAME}")
     
@@ -102,6 +109,7 @@ extentions = [
         library_dirs = [f"{BUILD_DIR}"],
         libraries = ["hgscvrp"],
         # extra_objects = [f"{BUILD_DIR}/{LIB_FILENAME}"]
+        # extra_link_args = get_extra_link_args(),
     )
 ]
 
@@ -132,11 +140,9 @@ setup(
         "build_py": BuildPyCommand,
     },
     ext_modules=cythonize(extentions),    
-    data_files=[("lib", [f"{BUILD_DIR}/{LIB_FILENAME}"])],
+    # data_files=[("lib", [f"{BUILD_DIR}/{LIB_FILENAME}"])],
     # include_package_data=True,    
-    # package_data={
-    #     "": ["libhgscvrp.*"],
-    # },
+    # package_data={"": [f"{BUILD_DIR}/{LIB_FILENAME}"],},
     install_requires=[
         "Cython>=0.29.0",
         "numpy>=1.23.0",
