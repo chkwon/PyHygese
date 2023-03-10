@@ -39,8 +39,6 @@ HGS_SRC = f"https://github.com/vidalt/HGS-CVRP/archive/v{HGS_VERSION}.tar.gz"
 
 DEPS_DIR = "deps"
 BUILD_DIR = "deps/build"
-BIN_DIR = "deps/bin"
-
 
 def get_lib_filename():
     if platform.system() == "Linux":
@@ -52,11 +50,11 @@ def get_lib_filename():
     else:
         lib_ext = "so"
         
-    lib_ext = "a"
     return f"libhgscvrp.{lib_ext}"
 
 
-LIB_FILENAME = get_lib_filename()
+# LIB_FILENAME = get_lib_filename()
+LIB_FILENAME = "libhgscvrp.a"
 
 
 def convert_shared_to_static():
@@ -67,6 +65,8 @@ def convert_shared_to_static():
     
     with open(f"{DEPS_DIR}/HGS-CVRP-{HGS_VERSION}/CMakeLists.txt", "w") as f:
         f.write(new_lines)
+        f.write("\n")
+        f.write("set(CMAKE_POSITION_INDEPENDENT_CODE ON)")
 
 
 def download_build_hgs():
