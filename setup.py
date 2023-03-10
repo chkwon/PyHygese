@@ -37,7 +37,8 @@ def _safe_makedirs(*paths):
 HGS_VERSION = "2.0.0"
 HGS_SRC = f"https://github.com/vidalt/HGS-CVRP/archive/v{HGS_VERSION}.tar.gz"
 
-LIB_DIR = "deps"
+DEPS_DIR = "deps"
+SRC_DIR = f"deps/HGS-CVRP-{HGS_VERSION}"
 BUILD_DIR = "deps/build"
 BIN_DIR = "deps/bin"
 
@@ -70,12 +71,12 @@ LIB_FILENAME = get_lib_filename()
 
 
 def download_build_hgs():
-    _safe_makedirs(LIB_DIR)
+    _safe_makedirs(DEPS_DIR)
     _safe_makedirs(BUILD_DIR)
     hgs_src_tarball_name = "{}.tar.gz".format(HGS_VERSION)
-    hgs_src_path = pjoin(LIB_DIR, hgs_src_tarball_name)
+    hgs_src_path = pjoin(DEPS_DIR, hgs_src_tarball_name)
     urlretrieve(HGS_SRC, hgs_src_path)
-    _run(f"tar xzvf {hgs_src_tarball_name}", LIB_DIR)
+    _run(f"tar xzvf {hgs_src_tarball_name}", DEPS_DIR)
     _run(
         f'cmake -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles" ../HGS-CVRP-{HGS_VERSION}',
         BUILD_DIR,
@@ -85,6 +86,9 @@ def download_build_hgs():
 
     if platform.system() == "Windows":
         shutil.copyfile(f"{BUILD_DIR}/{LIB_FILENAME}", f"hygese/{LIB_FILENAME}")
+        shutil.copyfile(f"{SRC_DIR}/Program/AlgorithmParameters.h", f"hygese/AlgorithmParameters.h")
+        shutil.copyfile(f"{SRC_DIR}/Program/C_Interface.h", f"hygese/C_Interface.h")
+        
 
 
 class BuildPyCommand(_build_py):
