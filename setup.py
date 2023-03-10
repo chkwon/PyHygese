@@ -99,9 +99,9 @@ extentions = [
         sources=["hygese/wrapper.pyx"],
         include_dirs = [f"deps/HGS-CVRP-{HGS_VERSION}/Program/"],
         language="c",
-        # library_dirs = ["hygese"],
-        # libraries = ["hgscvrp"],
-        extra_objects = [f"{BUILD_DIR}/{LIB_FILENAME}"]
+        library_dirs = [f"{BUILD_DIR}"],
+        libraries = ["hgscvrp"],
+        # extra_objects = [f"{BUILD_DIR}/{LIB_FILENAME}"]
     )
 ]
 
@@ -132,7 +132,7 @@ setup(
         "build_py": BuildPyCommand,
     },
     ext_modules=cythonize(extentions),    
-    # data_files=[("lib", [f"hygese/{LIB_FILENAME}"])],
+    data_files=[("lib", [f"{BUILD_DIR}/{LIB_FILENAME}"])],
     # include_package_data=True,    
     # package_data={
     #     "": ["libhgscvrp.*"],
