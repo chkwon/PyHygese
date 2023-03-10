@@ -1,4 +1,4 @@
-from hygese.wrapper import _solve_cvrp_dist_mtx, _solve_cvrp, RoutingSolution
+from .wrapper import _solve_cvrp_dist_mtx, _solve_cvrp, RoutingSolution
 from dataclasses import dataclass
 import numpy as np
 
