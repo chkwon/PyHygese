@@ -83,7 +83,8 @@ def download_build_hgs():
     _run("make lib", BUILD_DIR)
     _run("make DESTDIR=../../hygese install", BUILD_DIR)
 
-    # shutil.copyfile(f"{BUILD_DIR}/{LIB_FILENAME}", f"hygese/{LIB_FILENAME}")
+    if platform.system() == "Windows":
+        shutil.copyfile(f"{BUILD_DIR}/{LIB_FILENAME}", f"hygese/{LIB_FILENAME}")
 
 
 class BuildPyCommand(_build_py):
