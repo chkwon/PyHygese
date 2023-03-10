@@ -107,3 +107,9 @@ def test_cvrp_duration():
 
     result = hgs_solver.solve_cvrp(data, rounding=True)
     assert result.cost == 42
+    
+if __name__ == "__main__":
+    test_cvrp()
+    test_cvrp_inputs()
+    test_cvrp_dist_mtx()
+    test_cvrp_duration()

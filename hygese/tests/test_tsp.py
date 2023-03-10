@@ -63,3 +63,10 @@ def test_tsp():
 #         cost += dist_mtx_int[route[n-1], route[0]]
 #
 #         assert result.cost == cost
+
+
+if __name__ == "__main__":
+    test_tsp()
+    # test_elkai()  
+    
+    
