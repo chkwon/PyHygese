@@ -14,8 +14,8 @@ set(CMAKE_CXX_STANDARD 17)
 include(FetchContent)
 FetchContent_Declare(
   hgscvrp
-  GIT_REPOSITORY https://github.com/mdealencar/HGS-CVRP.git
-  GIT_TAG main
+  GIT_REPOSITORY https://github.com/vidalt/HGS-CVRP.git
+  GIT_TAG 1a927955cd2861a29d978f0d359d6e647db9319c
 )
 FetchContent_MakeAvailable(hgscvrp)
 
