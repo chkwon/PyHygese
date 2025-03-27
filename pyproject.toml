@@ -1,3 +1,14 @@
+[project]
+name = "hygese"
+version = "0.0.0.9"
+authors = [{name = "Changhyun Kwon"}]
+description = "Wrapper for the Hybrid Genetic Search algorithm for Capacitated Vehicle Routing Problems (HGS-CVRP)"
+readme = {file = "README.md", content-type = "text/markdown"}
+requires-python=">=3.10"
+
 [build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
+requires = ["scikit-build-core"]
+build-backend = "scikit_build_core.build"
+
+[tool.scikit-build]
+cmake.build-type = "Release"
