@@ -1,7 +1,17 @@
 cmake_minimum_required(VERSION 3.15)
 
 set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR} CACHE PATH "install prefix" FORCE)
-set(CMAKE_BUILD_TYPE "Release")
+
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
+if(WIN32)
+    # MSBUILD toolchain names the shared library as hgscvrp.dll
+    # this forces it to use libhgscvrp.dll
+    set(CMAKE_SHARED_LIBRARY_PREFIX_CXX "lib")
+    message("lib added")
+endif()
 
 project(
     ${SKBUILD_PROJECT_NAME}
