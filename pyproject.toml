@@ -1,6 +1,6 @@
 [project]
 name = "hygese"
-version = "0.0.0.9"
+version = "0.0.0.11"
 authors = [{name = "Changhyun Kwon"}]
 description = "Wrapper for the Hybrid Genetic Search algorithm for Capacitated Vehicle Routing Problems (HGS-CVRP)"
 readme = {file = "README.md", content-type = "text/markdown"}
