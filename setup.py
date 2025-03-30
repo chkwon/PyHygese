@@ -106,7 +106,7 @@ class BuildPyCommand(_build_py):
 
 setup(
     name="hygese",
-    version="0.0.0.9",
+    version="0.0.0.10",
     description="A Python wrapper for the HGS-CVRP solver",
     long_description=long_description,
     long_description_content_type="text/markdown",
