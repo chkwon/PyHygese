@@ -1,14 +1,11 @@
-name: Publish Python 🐍 source distribution to PyPI and TestPyPI
+name: Publish Python 🐍 source distribution to PyPI
 
 on: push
 
 jobs:
   build:
     name: Build source distribution 📦
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -25,7 +22,7 @@ jobs:
       - name: Store the distribution package
         uses: actions/upload-artifact@v4
         with:
-          name: python-package-sdist-${{ matrix.os }}
+          name: python-package-sdist
           path: dist/
 
   publish-to-pypi:
@@ -39,11 +36,10 @@ jobs:
     permissions:
       id-token: write
     steps:
-      - name: Download all the sdist artifacts
+      - name: Download the sdist artifact
         uses: actions/download-artifact@v4
         with:
-          # Use wildcard to combine artifacts from different OS builds
-          name: python-package-sdist-*
+          name: python-package-sdist
           path: dist/
       - name: Publish source distribution 📦 to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
@@ -56,10 +52,10 @@ jobs:
       contents: write
       id-token: write
     steps:
-      - name: Download all the sdist artifacts
+      - name: Download the sdist artifact
         uses: actions/download-artifact@v4
         with:
-          name: python-package-sdist-*
+          name: python-package-sdist
           path: dist/
       - name: Sign the sdist with Sigstore
         uses: sigstore/gh-action-sigstore-python@v3.0.0
