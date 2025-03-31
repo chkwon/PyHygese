@@ -12,3 +12,6 @@ build-backend = "scikit_build_core.build"
 
 [tool.scikit-build]
 cmake.build-type = "Release"
+
+[tool.coverage.paths]
+source = ["src", "*/site-packages"]  
