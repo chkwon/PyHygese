@@ -41,9 +41,7 @@ jobs:
 
       - name: Install and Build
         run: |
-          python -m build
-          ls -l dist
-          python -m pip install dist/hygese*.whl
+          python -m pip install .
 
       - name: Test with pytest
         run: |
