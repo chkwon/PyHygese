@@ -10,7 +10,6 @@ if(WIN32)
     # MSBUILD toolchain names the shared library as hgscvrp.dll
     # this forces it to use libhgscvrp.dll
     set(CMAKE_SHARED_LIBRARY_PREFIX_CXX "lib")
-    message("lib added")
 endif()
 
 project(
