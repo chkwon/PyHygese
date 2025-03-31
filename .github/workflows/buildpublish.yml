@@ -1,0 +1,64 @@
+name: Build wheels+sdist and publish to PyPI
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
+
+jobs:
+  make_sdist:
+    name: Make SDist
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build SDist
+        run: pipx run build --sdist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cibw-sdist
+          path: dist/*.tar.gz
+  build_wheels:
+    name: Wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: true
+      - uses: pypa/cibuildwheel@v2.23
+        env:
+          CIBW_ARCHS: auto64
+          CIBW_SKIP: "*musllinux* pp*"
+          CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/manylinux_2_34
+      - name: Upload wheels
+        uses: actions/upload-artifact@v4
+        with:
+          name: cibw-wheels-${{ matrix.os }}
+          path: wheelhouse/*.whl
+  publish_all:
+    name: Publish on PyPI
+    needs: [build_wheels, make_sdist]
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+      attestations: write
+      contents: read
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: cibw-*
+          path: dist
+          merge-multiple: true
+      - name: Generate artifact attestations
+        uses: actions/attest-build-provenance@v2.2.3
+        with:
+          subject-path: "dist/*"
+      - name: Upload to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
