@@ -48,7 +48,7 @@ jobs:
 
       - name: Test with pytest
         run: |
-          pip install pytest-cov
+          pip install pytest-cov numpy
           pytest -s --cov=hygese --cov-report=xml
 
       - name: Upload coverage to Codecov
