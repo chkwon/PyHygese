@@ -45,7 +45,7 @@ jobs:
 
       - name: Test with pytest
         run: |
-          pytest -s --cov=hygese --cov-report=xml
+          pytest -s --import-mode=importlib --cov=hygese --cov-report=xml
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
