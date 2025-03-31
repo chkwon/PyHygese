@@ -45,9 +45,7 @@ jobs:
 
       - name: Test with pytest
         run: |
-          cd hygese/tests
-          pytest -s --cov=hygese --cov-report=xml
-          cd ../..
+          pytest -s --cov=hygese --cov-report=xml --pyargs hygese.tests
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
