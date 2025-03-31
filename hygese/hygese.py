@@ -29,7 +29,7 @@ def get_lib_filename():
 
 
 # basedir = os.path.abspath(os.path.dirname(__file__))
-basedir = os.path.dirname(os.path.realpath(__file__))
+basedir = os.path.dirname(os.path.realpath(__file__, strict=True))
 # os.add_dll_directory(basedir)
 HGS_LIBRARY_FILEPATH = os.path.join(basedir, get_lib_filename())
 
