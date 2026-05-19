@@ -185,8 +185,16 @@ class Solver:
         if depot != 0:
             raise ValueError("In HGS, the depot location must be 0.")
 
-        # optional num_vehicles
-        maximum_number_of_vehicles = data.get("num_vehicles", C_INT_MAX)
+        # optional num_vehicles (support common aliases from HGS examples)
+        maximum_number_of_vehicles = data.get("num_vehicles")
+        if maximum_number_of_vehicles is None:
+            maximum_number_of_vehicles = data.get("nbVeh")
+        if maximum_number_of_vehicles is None:
+            maximum_number_of_vehicles = data.get("max_nbVeh")
+        if maximum_number_of_vehicles is None:
+            maximum_number_of_vehicles = C_INT_MAX
+        else:
+            maximum_number_of_vehicles = int(maximum_number_of_vehicles)
 
         # optional service_times
         service_times = data.get("service_times")

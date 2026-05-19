@@ -44,6 +44,7 @@ demands[0] = 0 # depot demand = 0
 data['demands'] = demands
 data['vehicle_capacity'] = np.ceil(n/3).astype(int)
 data['num_vehicles'] = 3
+# `nbVeh` and `max_nbVeh` are also accepted aliases for maximum number of vehicles.
 data['depot'] = 0
 
 result = hgs_solver.solve_cvrp(data)
@@ -155,4 +156,3 @@ class AlgorithmParameters:
 
 ## Others
 A Julia wrapper is available: [Hygese.jl](https://github.com/chkwon/Hygese.jl)
-

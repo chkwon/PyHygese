@@ -92,6 +92,35 @@ def test_list_coordinates_accepted(quick_ap):
     assert result.n_routes >= 1
 
 
+def test_nbveh_alias_is_supported(monkeypatch, quick_ap):
+    solver = Solver(quick_ap, verbose=False)
+    seen = {}
+
+    def fake_solve_cvrp(
+        x_coords,
+        y_coords,
+        service_times,
+        demand,
+        vehicle_capacity,
+        duration_limit,
+        is_rounding_integer,
+        is_duration_constraint,
+        maximum_number_of_vehicles,
+        algorithm_parameters,
+        verbose,
+    ):
+        seen["maximum_number_of_vehicles"] = maximum_number_of_vehicles
+        return object()
+
+    monkeypatch.setattr(solver, "_solve_cvrp", fake_solve_cvrp)
+
+    data = _tiny_coord_data()
+    data["nbVeh"] = 7
+
+    solver.solve_cvrp(data)
+    assert seen["maximum_number_of_vehicles"] == 7
+
+
 # --- input validation ------------------------------------------------------
 
 
