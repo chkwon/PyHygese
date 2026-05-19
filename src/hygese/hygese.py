@@ -29,7 +29,7 @@ def get_lib_filename():
 
 
 # basedir = os.path.abspath(os.path.dirname(__file__))
-basedir = os.path.dirname(os.path.realpath(__file__))
+basedir = os.path.dirname(os.path.realpath(__file__, strict=True))
 # os.add_dll_directory(basedir)
 HGS_LIBRARY_FILEPATH = os.path.join(basedir, get_lib_filename())
 
@@ -47,9 +47,13 @@ class CAlgorithmParameters(Structure):
         ("lambda", c_int),
         ("nbElite", c_int),
         ("nbClose", c_int),
+        ("nbIterPenaltyManagement", c_int),
         ("targetFeasible", c_double),
+        ("penaltyDecrease", c_double),
+        ("penaltyIncrease", c_double),
         ("seed", c_int),
         ("nbIter", c_int),
+        ("nbIterTraces", c_int),
         ("timeLimit", c_double),
         ("useSwapStar", c_int),
     ]
@@ -62,9 +66,13 @@ class AlgorithmParameters:
     lambda_: int = 40
     nbElite: int = 4
     nbClose: int = 5
+    nbIterPenaltyManagement: int = 100
     targetFeasible: float = 0.2
+    penaltyDecrease: float = 0.85
+    penaltyIncrease: float = 1.2
     seed: int = 0
     nbIter: int = 20000
+    nbIterTraces: int = 500
     timeLimit: float = 0.0
     useSwapStar: bool = True
 
@@ -76,9 +84,13 @@ class AlgorithmParameters:
             self.lambda_,
             self.nbElite,
             self.nbClose,
+            self.nbIterPenaltyManagement,
             self.targetFeasible,
+            self.penaltyDecrease,
+            self.penaltyIncrease,
             self.seed,
             self.nbIter,
+            self.nbIterTraces,
             self.timeLimit,
             int(self.useSwapStar),
         )
