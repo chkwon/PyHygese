@@ -107,3 +107,34 @@ def test_cvrp_duration():
 
     result = hgs_solver.solve_cvrp(data, rounding=True)
     assert result.cost == 42
+
+
+def test_routing_solution_invariants():
+    """A feasible CVRP solution must visit every customer exactly once,
+    keep the depot out of route bodies, respect vehicle count, and not
+    exceed per-vehicle capacity.
+    """
+    data = get_data()
+    n_nodes = len(data['demands'])
+
+    ap = AlgorithmParameters(timeLimit=1.1)
+    result = Solver(ap, verbose=False).solve_cvrp(data)
+
+    assert result.cost > 0
+    assert result.n_routes >= 1
+    assert result.n_routes <= data['num_vehicles']
+    assert len(result.routes) == result.n_routes
+
+    visited = [node for route in result.routes for node in route]
+    assert sorted(visited) == list(range(1, n_nodes)), (
+        f"Each customer 1..{n_nodes - 1} must appear exactly once across "
+        f"all routes (and depot 0 must not appear); got {sorted(visited)}"
+    )
+
+    capacity = data['vehicle_capacity']
+    demand = data['demands']
+    for route in result.routes:
+        load = sum(demand[i] for i in route)
+        assert load <= capacity, (
+            f"Route {route} has total demand {load} > capacity {capacity}"
+        )
