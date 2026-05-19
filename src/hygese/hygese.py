@@ -8,7 +8,6 @@ from ctypes import (
     c_double,
     c_char,
     sizeof,
-    cast,
     byref,
 )
 from dataclasses import dataclass
@@ -287,10 +286,13 @@ class Solver:
         verbose: bool,
     ):
         n_nodes = x_coords.size
-        x_ct = x_coords.astype(c_double).ctypes
-        y_ct = y_coords.astype(c_double).ctypes
-        s_ct = service_times.astype(c_double).ctypes
-        d_ct = demand.astype(c_double).ctypes
+        # Bind each contiguous float64 view to a local so the buffer is pinned
+        # for the full duration of the C call. ascontiguousarray copies only
+        # when dtype/layout already mismatches the C expectation.
+        x = np.ascontiguousarray(x_coords, dtype=np.float64)
+        y = np.ascontiguousarray(y_coords, dtype=np.float64)
+        s = np.ascontiguousarray(service_times, dtype=np.float64)
+        d = np.ascontiguousarray(demand, dtype=np.float64)
         ap_ct = algorithm_parameters.ctypes
 
         # struct Solution * solve_cvrp(
@@ -299,10 +301,10 @@ class Solver:
         # 	int max_nbVeh, const struct AlgorithmParameters* ap, char verbose);
         sol_p = self._c_api_solve_cvrp(
             n_nodes,
-            cast(x_ct, c_double_p),
-            cast(y_ct, c_double_p),
-            cast(s_ct, c_double_p),
-            cast(d_ct, c_double_p),
+            x.ctypes.data_as(c_double_p),
+            y.ctypes.data_as(c_double_p),
+            s.ctypes.data_as(c_double_p),
+            d.ctypes.data_as(c_double_p),
             vehicle_capacity,
             duration_limit,
             is_rounding_integer,
@@ -312,8 +314,11 @@ class Solver:
             verbose,
         )
 
-        result = RoutingSolution(sol_p)
-        self._c_api_delete_sol(sol_p)
+        try:
+            result = RoutingSolution(sol_p)
+        finally:
+            if sol_p:
+                self._c_api_delete_sol(sol_p)
         return result
 
     def _solve_cvrp_dist_mtx(
@@ -332,12 +337,13 @@ class Solver:
     ):
         n_nodes = x_coords.size
 
-        x_ct = x_coords.astype(c_double).ctypes
-        y_ct = y_coords.astype(c_double).ctypes
-        s_ct = service_times.astype(c_double).ctypes
-        d_ct = demand.astype(c_double).ctypes
-
-        m_ct = dist_mtx.reshape(n_nodes * n_nodes).astype(c_double).ctypes
+        x = np.ascontiguousarray(x_coords, dtype=np.float64)
+        y = np.ascontiguousarray(y_coords, dtype=np.float64)
+        s = np.ascontiguousarray(service_times, dtype=np.float64)
+        d = np.ascontiguousarray(demand, dtype=np.float64)
+        # A 2-D contiguous float64 array's data buffer is already a flat n*n
+        # block of doubles, so no extra reshape/ravel is needed.
+        m = np.ascontiguousarray(dist_mtx, dtype=np.float64)
         ap_ct = algorithm_parameters.ctypes
 
         # struct Solution *solve_cvrp_dist_mtx(
@@ -346,11 +352,11 @@ class Solver:
         # 	int max_nbVeh, const struct AlgorithmParameters *ap, char verbose);
         sol_p = self._c_api_solve_cvrp_dist_mtx(
             n_nodes,
-            cast(x_ct, c_double_p),
-            cast(y_ct, c_double_p),
-            cast(m_ct, c_double_p),
-            cast(s_ct, c_double_p),
-            cast(d_ct, c_double_p),
+            x.ctypes.data_as(c_double_p),
+            y.ctypes.data_as(c_double_p),
+            m.ctypes.data_as(c_double_p),
+            s.ctypes.data_as(c_double_p),
+            d.ctypes.data_as(c_double_p),
             vehicle_capacity,
             duration_limit,
             is_duration_constraint,
@@ -359,6 +365,9 @@ class Solver:
             verbose,
         )
 
-        result = RoutingSolution(sol_p)
-        self._c_api_delete_sol(sol_p)
+        try:
+            result = RoutingSolution(sol_p)
+        finally:
+            if sol_p:
+                self._c_api_delete_sol(sol_p)
         return result
